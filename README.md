@@ -4,7 +4,7 @@
 
 ## Maven dependencies
 
-```maven
+```xml
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
