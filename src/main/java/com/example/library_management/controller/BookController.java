@@ -39,7 +39,7 @@ public class BookController  {
     }
   }
 
-  @PostMapping("/edit-book")
+  @PutMapping("/edit-book")
   public ResponseEntity<String> updateBook(@RequestBody Book book) {
     try {
       String isbn = book.getISBN();
