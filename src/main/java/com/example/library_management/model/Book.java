@@ -9,7 +9,7 @@ public class Book {
   @Id private String ISBN;
 
   private String title;
-  private String subeject;
+  private String subject;
   private String publisher;
   private String language;
   private String numberOfPage;
@@ -45,12 +45,12 @@ public class Book {
     this.title = title;
   }
 
-  public String getSubeject() {
-    return subeject;
+  public String getSubject() {
+    return subject;
   }
 
-  public void setSubeject(String subeject) {
-    this.subeject = subeject;
+  public void setSubeject(String subject) {
+    this.subject = subject;
   }
 
   public String getPublisher() {
