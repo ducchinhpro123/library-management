@@ -2,6 +2,9 @@ package com.example.library_management.controller;
 
 import com.example.library_management.model.Book;
 import com.example.library_management.service.BookService;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,9 +52,14 @@ public class MainController {
   }
 
   @GetMapping("/get-book")
-  public ResponseEntity<Book> getBook(@RequestParam(name = "isbn") String isbn) {
+  public ResponseEntity<?> getBook(@RequestParam(name = "isbn") String isbn) {
     Optional<Book> book = bookService.getBook(isbn);
     if (book.isPresent()) return new ResponseEntity<>(book.get(), HttpStatus.OK);
-    else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    else {
+      Map<String, String> message = new HashMap<>();
+      message.put("message", "Can not found the book with the isbn: " + isbn);
+      return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+
+    }
   }
 }

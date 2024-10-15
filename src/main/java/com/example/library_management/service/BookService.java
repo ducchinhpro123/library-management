@@ -47,10 +47,10 @@ public class BookService {
     }
   }
 
-  public Optional<Book> getBook(String ISBN) throws IllegalArgumentException {
+  public Optional<Book> getBook(String ISBN) {
     Optional<Book> book = bookRepository.findById(ISBN);
     if (book.isEmpty()) {
-      throw new RuntimeException("Can not find the book with that isbn");
+      return Optional.empty();
     }
     return book;
   }
