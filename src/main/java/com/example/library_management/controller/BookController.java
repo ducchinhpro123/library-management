@@ -20,9 +20,9 @@ public class BookController  {
   }
 
   @PostMapping("/create-book")
-  public ResponseEntity<String> createBook(@RequestBody Book newBook) {
+  public ResponseEntity<String> createBook(@RequestBody Book newBook, @RequestParam String authorName) {
     try {
-      bookService.createBook(newBook);
+      bookService.createBook(newBook, authorName);
       return new ResponseEntity<>("Book created successfully.", HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
