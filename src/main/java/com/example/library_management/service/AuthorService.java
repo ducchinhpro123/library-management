@@ -43,6 +43,14 @@ public class AuthorService {
     }
   }
 
+  public Author getAuthor(String authorName) {
+    Author author = authorRepository.findByName(authorName);
+    if (author == null) {
+      return null;
+    }
+    return author;
+  }
+
   public Optional<Author> getAuthor(Integer id) {
     Optional<Author> author = authorRepository.findById(id);
     if (author.isEmpty()) {
