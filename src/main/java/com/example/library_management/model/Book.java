@@ -12,7 +12,7 @@ public class Book {
   private String subject;
   private String publisher;
   private String language;
-  private String numberOfPage;
+  private int numberOfPage;
 
   @ManyToMany
   @JoinTable(
@@ -69,11 +69,11 @@ public class Book {
     this.language = language;
   }
 
-  public String getNumberOfPage() {
+  public int getNumberOfPage() {
     return numberOfPage;
   }
 
-  public void setNumberOfPage(String numberOfPage) {
+  public void setNumberOfPage(int numberOfPage) {
     this.numberOfPage = numberOfPage;
   }
 }

@@ -38,7 +38,7 @@ public class BookService {
       book.setTitle(newBook.getTitle());
       book.setISBN(newBook.getISBN());
       book.setLanguage(newBook.getLanguage());
-      book.setSubeject(newBook.getSubeject());
+      book.setSubeject(newBook.getSubject());
       book.setPublisher(newBook.getPublisher());
       book.setNumberOfPage(newBook.getNumberOfPage());
       bookRepository.save(book);
