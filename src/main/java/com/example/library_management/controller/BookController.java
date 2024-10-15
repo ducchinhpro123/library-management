@@ -10,13 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-public class MainController {
+public class BookController  {
   private final BookService bookService;
 
-  public MainController(BookService bookService) {
+  public BookController(BookService bookService) {
     this.bookService = bookService;
   }
 
@@ -59,7 +58,6 @@ public class MainController {
       Map<String, String> message = new HashMap<>();
       message.put("message", "Can not found the book with the isbn: " + isbn);
       return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-
     }
   }
 }
