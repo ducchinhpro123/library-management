@@ -2,14 +2,12 @@ package com.example.library_management.controller;
 
 import com.example.library_management.model.Author;
 import com.example.library_management.service.AuthorService;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 public class AuthorController {
@@ -30,7 +28,7 @@ public class AuthorController {
   }
 
   @DeleteMapping("/delete-author")
-  public ResponseEntity<String> deleteBook(@RequestParam(name = "isbn") Integer id) {
+  public ResponseEntity<String> deleteAuthor(@RequestParam(name = "id") Integer id) {
     try {
       authorService.deleteAuthor(id);
       return new ResponseEntity<>("Author deleted successfully.", HttpStatus.OK);
@@ -39,8 +37,8 @@ public class AuthorController {
     }
   }
 
-  @PostMapping("/edit-author")
-  public ResponseEntity<String> updateBook(@RequestBody Author author) {
+  @PutMapping("/edit-author")
+  public ResponseEntity<String> updateAuthor(@RequestBody Author author) {
     try {
       Integer id = author.getId();
       authorService.updateAuthor(id, author);
@@ -51,7 +49,7 @@ public class AuthorController {
   }
 
   @GetMapping("/get-author")
-  public ResponseEntity<?> getBook(@RequestParam(name = "id") Integer id) {
+  public ResponseEntity<?> getAuthor(@RequestParam(name = "id") Integer id) {
     Optional<Author> author = authorService.getAuthor(id);
     if (author.isPresent()) return new ResponseEntity<>(author.get(), HttpStatus.OK);
     else {
