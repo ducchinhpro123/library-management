@@ -1,6 +1,11 @@
 package com.example.library_management.service;
 
+import com.example.library_management.model.Author;
 import com.example.library_management.model.Book;
+import com.example.library_management.model.BookAuthor;
+import com.example.library_management.model.BookAuthorId;
+import com.example.library_management.repository.AuthorRepository;
+import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -8,16 +13,48 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookService {
   private final BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
+  private final BookAuthorRepository bookAuthorRepository;
 
-  public BookService(BookRepository bookRepository) {
+  public BookService(
+      BookRepository bookRepository,
+      AuthorRepository authorRepository,
+      BookAuthorRepository bookAuthorRepository) {
     this.bookRepository = bookRepository;
+    this.authorRepository = authorRepository;
+    this.bookAuthorRepository = bookAuthorRepository;
   }
 
-  public void createBook(Book newBook) throws IllegalArgumentException {
-    if (newBook == null) return;
+  public void createBook(Book newBook, String authorName) throws IllegalArgumentException {
+    /*
+     * If there is no authorName, refuse to insert the book.
+     * If the authorName is given without null, try to find the author with that name
+     */
+    if (newBook == null || authorName == null) throw new IllegalArgumentException();
 
     try {
+      Author author = authorRepository.findByName(authorName);
+
+      if (author == null) {
+        throw new IllegalArgumentException("Author not found");
+      }
+
+      // Prevent the duplicate entries
+      // if (!newBook.getAuthors().contains(author)) {
+      //  newBook.getAuthors().add(author);
+      //  author.getBooks().add(newBook);
+      // }
+
       bookRepository.save(newBook);
+
+      BookAuthorId bookAuthorId = new BookAuthorId(newBook.getISBN(), author.getId());
+      BookAuthor bookAuthor = new BookAuthor();
+      bookAuthor.setId(bookAuthorId);
+      bookAuthor.setBook(newBook);
+      bookAuthor.setAuthor(author);
+
+      bookAuthorRepository.save(bookAuthor);
+
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage());
     }
