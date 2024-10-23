@@ -12,6 +12,7 @@ public class Book {
   private String subject;
   private String publisher;
   private String language;
+  private String imageUrl;
   private int numberOfPage;
 
   @ManyToMany
@@ -75,5 +76,13 @@ public class Book {
 
   public void setNumberOfPage(int numberOfPage) {
     this.numberOfPage = numberOfPage;
+  }
+
+  public String getImageUrl() {
+	return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+	this.imageUrl = imageUrl;
   }
 }
