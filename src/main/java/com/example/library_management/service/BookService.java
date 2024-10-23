@@ -7,6 +7,9 @@ import com.example.library_management.model.BookAuthorId;
 import com.example.library_management.repository.AuthorRepository;
 import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,11 @@ public class BookService {
     this.bookAuthorRepository = bookAuthorRepository;
   }
 
+  public List<Book> findAllBooks() {
+    List<Book> books = bookRepository.findAll();
+    return books;
+  }
+
   public void createBook(Book newBook, String authorName) throws IllegalArgumentException {
     /*
      * If there is no authorName, refuse to insert the book.
@@ -38,12 +46,6 @@ public class BookService {
       if (author == null) {
         throw new IllegalArgumentException("Author not found");
       }
-
-      // Prevent the duplicate entries
-      // if (!newBook.getAuthors().contains(author)) {
-      //  newBook.getAuthors().add(author);
-      //  author.getBooks().add(newBook);
-      // }
 
       bookRepository.save(newBook);
 
