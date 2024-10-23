@@ -1,0 +1,99 @@
+.table-container {
+  margin-top:15px;
+}
+table {
+  border:1px solid gray;
+  border-collapse:collapse;
+  position:relative;
+  text-align:left;
+  background:white;
+  width:100%;
+  max-width:600px;
+  user-select:none;
+}
+table thead {
+  position:sticky;
+  top:0;
+  background:#FFFFFFAA;
+  z-index:3;
+  box-shadow:0 1px 0 0 gray;
+  backdrop-filter:blur(2px);
+}
+table th, table td { padding:3px 5px; vertical-align:top; }
+table tbody tr {
+  border-top:1px solid gray;
+}
+table th 
+  background:purple;
+  color:white;
+}
+table th:nth-child(1) { width:30px; }
+table th:nth-child(2) { width:30px; text-align:right; }
+table th:nth-child(3) { width:auto; }
+table th:nth-child(4) { width:60px; text-align:right; }
+
+table td:nth-child(1) { width:30px; margin:0; padding:0; }
+table td:nth-child(2) { width:60px; text-align:right; }
+table td:nth-child(3) { width:auto; }
+table td:nth-child(4) { width:60px; text-align:right; }
+
+table tbody tr:has(input:checked) {
+  background:lavender;
+}
+table tbody{
+  overflow:hidden;
+}
+
+table tbody tr td label {
+  position:absolute;
+    width:25px; height:25px;
+ }
+label, label input {
+   cursor:pointer;
+}
+html:has(input[name="select"]:checked) table tbody tr td label {
+  width:100%;
+}
+
+
+
+.navigator {}
+.navigator input {
+  opacity:0;
+  position:absolute;
+}
+.navigator:before { content:"Pages: " }
+.navigator label {
+  display:inline-block;
+  position:relative;
+  border:1px solid #FFFFFF00;
+  border-top:none;
+  padding:5px;
+  margin-top:-1px;
+  color:blue;
+}
+.navigator label:has(input:checked) {
+    border-color:gray;
+    background:white;
+ }
+.settings {
+   margin-top:15px;
+}
+.settings label {
+    display:block;
+  margin-bottom:5px;
+}
+.settings label .note {
+  display:block;
+  font-size:0.8rem;
+  padding:3px 0 0 1.65em;
+  opacity:0.5;
+}
+
+/* This the tricky part */
+html:has(input[name="navigator"]:checked[value="1"]) table tbody tr { display:none; }
+html:has(input[name="page"]:checked[value="1"]) table tr[data-page="1"] { display:table-row; }
+html:has(input[name="page"]:checked[value="2"]) table tr[data-page="2"] { display:table-row; }
+html:has(input[name="page"]:checked[value="3"]) table tr[data-page="3"] { display:table-row; }
+html:has(input[name="page"]:checked[value="4"]) table tr[data-page="4"] { display:table-row; }
+html:has(input[name="navigator"]:not(:checked)[value="1"]) .navigator { display:none; }
