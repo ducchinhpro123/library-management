@@ -1,1 +1,297 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Library 📚</title>
+    <style>
+      body {
+        background: #000080;
+        color: #fff;
+        font-family: "Comic Sans MS", cursive;
+        margin: 0;
+        padding: 20px;
+        background-image: url("data:image/gif;base64,R0lGODlhCgAKAIAAAAAAAP///yH5BAEAAAEALAAAAAAKAAoAAAIRjI+py+0Po5y02ouz3rz7VgAAOw==");
+      }
 
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(0, 0, 128, 0.8);
+        padding: 20px;
+        border: 5px outset #c0c0c0;
+      }
+
+      h1 {
+        text-align: center;
+        color: #ffff00;
+        text-shadow: 2px 2px #ff00ff;
+      }
+
+      .counter {
+        text-align: center;
+        border: 2px inset #c0c0c0;
+        padding: 5px;
+        background: #000;
+        margin: 10px 0;
+      }
+
+      .menu {
+        background: #808080;
+        border: 3px outset #c0c0c0;
+        padding: 10px;
+        margin: 20px 0;
+      }
+
+      .menu a {
+        color: #ffff00;
+        text-decoration: none;
+        margin: 0 10px;
+      }
+
+      .menu a:hover {
+        color: #ff00ff;
+      }
+
+      .book-list {
+        border: 2px inset #c0c0c0;
+        padding: 10px;
+        background: #000;
+        margin-top: 20px;
+      }
+
+      .book {
+        border: 1px solid #c0c0c0;
+        margin: 5px 0;
+        padding: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .book:hover {
+        background: #000080;
+      }
+
+      button {
+        background: #c0c0c0;
+        border: 2px outset #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-family: "Comic Sans MS", cursive;
+      }
+
+      button:active {
+        border-style: inset;
+      }
+
+      .under-construction {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      marquee {
+        background: #ff0000;
+        color: #ffff00;
+        padding: 5px;
+        margin: 10px 0;
+      }
+      .retro-table-container {
+        font-family: "MS Sans Serif", Arial, sans-serif;
+        background: #c0c0c0;
+        padding: 10px;
+        border: 2px outset #ffffff;
+        margin: 20px;
+      }
+
+      .retro-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 1px;
+        background: #808080;
+      }
+
+      .retro-table thead {
+        background: linear-gradient(90deg, #000080, #0000ff);
+      }
+
+      .retro-table th {
+        color: #ffffff;
+        font-weight: bold;
+        text-align: left;
+        padding: 8px;
+        border: 2px outset #d4d0c8;
+        text-shadow: 1px 1px #000000;
+      }
+
+      .retro-table tbody tr {
+        background: #ffffff;
+      }
+
+      .retro-table tbody tr:nth-child(even) {
+        background: #efefef;
+      }
+
+      .retro-table tbody tr:hover {
+        background: #dfd8d0;
+      }
+
+      .retro-table td {
+        padding: 8px;
+        border: 1px solid #808080;
+        color: #000000;
+      }
+
+      /* Custom checkbox styling */
+      .retro-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #ffffff;
+        border: 2px inset #d4d0c8;
+        cursor: pointer;
+      }
+
+      .retro-checkbox:checked {
+        background: #ffffff
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E")
+          center/80% no-repeat;
+      }
+
+      /* Image container styling */
+      .book-image {
+        border: 2px inset #d4d0c8;
+        padding: 4px;
+        background: #ffffff;
+      }
+
+      .book-image img {
+        width: 100px;
+        height: auto;
+        display: block;
+      }
+
+      /* Title styling */
+      .table-title {
+        background: linear-gradient(90deg, #000080, #0000ff);
+        color: #ffffff;
+        padding: 5px 10px;
+        margin-bottom: 5px;
+        border: 2px outset #d4d0c8;
+        font-weight: bold;
+        text-shadow: 1px 1px #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <iframe style="float: left" src="https://giphy.com/embed/l0MYGF7X6D8Z55v20" width="130" height="100" frameBorder="0" class="giphy-embed"></iframe>
+      <h1>🌟 Library 🌟</h1>
+      <img
+        src="/api/placeholder/88/31"
+        alt="Book animation"
+        style="float: right"
+      />
+
+      <div class="counter">
+        <span style="color: #00ff00">Visitors: 000372</span>
+      </div>
+
+      <marquee scrollamount="5">
+        🔥 Welcome to the coolest library on the World Wide Web! 🔥
+      </marquee>
+
+      <div class="menu">
+        <a href="#home">[ HOME ]</a>
+        <a href="#catalog">[ CATALOG ]</a>
+        <a href="#search">[ SEARCH ]</a>
+        <a href="#about">[ ABOUT ]</a>
+        <a href="#contact">[ CONTACT ]</a>
+      </div>
+
+      <div class="book-list">
+        <h2 style="color: #00ff00">📚 Latest Additions</h2>
+        <div class="book">
+          <span>The Art of Computer Programming</span>
+          <button>Check Out</button>
+        </div>
+        <div class="book">
+          <span>Neuromancer</span>
+          <button>Check Out</button>
+        </div>
+        <div class="book">
+          <span>Snow Crash</span>
+          <button>Check Out</button>
+        </div>
+      </div>
+
+    <div class="retro-table-container">
+      <div class="table-title">📚 Library Catalog</div>
+      <table class="retro-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ISBN</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Publisher</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-page="1" th:each="book: ${books}">
+            <td>
+              <label><input type="checkbox" class="retro-checkbox" /></label>
+            </td>
+            <td th:text="${book.ISBN}"></td>
+            <td>
+              <div class="book-image">
+                <img th:src="@{'/images/' + ${book.imageUrl}}" />
+              </div>
+            </td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.publisher}"></td>
+          </tr>
+          <!-- Example row for preview -->
+          <tr>
+            <td>
+              <label><input type="checkbox" class="retro-checkbox" /></label>
+            </td>
+            <td>978-0123456789</td>
+            <td>
+              <div class="book-image">
+                <img src="/api/placeholder/100/150" alt="Book cover" />
+              </div>
+            </td>
+            <td>Windows 95 For Dummies</td>
+            <td>IDG Books</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="under-construction">
+        <img src="/api/placeholder/100/100" alt="Under Construction" />
+        <br />
+        <span style="color: #ff0000"
+          >🚧 More awesome features coming soon! 🚧</span
+        >
+      </div>
+
+      <hr style="border: 1px dashed #ff00ff" />
+
+      <div style="text-align: center; font-size: 12px">
+        <span style="color: #00ff00"
+          >Best viewed in Netscape Navigator 3.0 or higher</span
+        >
+        <br />
+        <span style="color: #ff00ff">Resolution: 800x600</span>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          alert("Radical! Book checked out successfully!");
+        });
+      });
+    </script>
+  </body>
+</html>

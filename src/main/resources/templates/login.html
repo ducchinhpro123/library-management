@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="/assets/css/header.css" />
+    <title>Library Management</title>
+  </head>
+
+  <body>
+    <header th:replace="~{fragments/header}"></header>
+    <div>
+      <h1>Login</h1>
+      <form method="POST" action="/login">
+        <label>Username: <input type="text" name="username" /></label>
+        <label>Password: <input type="password" name="password" /></label>
+      </form>
+    </div>
+  </body>
+</html>
