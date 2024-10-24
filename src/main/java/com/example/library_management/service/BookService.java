@@ -8,7 +8,6 @@ import com.example.library_management.repository.AuthorRepository;
 import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

@@ -180,17 +180,136 @@
         font-weight: bold;
         text-shadow: 1px 1px #000000;
       }
+        .retro-login-link {
+            display: inline-block;
+            text-decoration: none;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .retro-login-button {
+            background: linear-gradient(90deg, #000080, #0000ff, #000080);
+            border: 3px outset #c0c0c0;
+            padding: 5px 20px;
+            width: 88px;
+            height: 31px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "MS Sans Serif", Arial, sans-serif;
+            animation: pulse 1.5s infinite;
+        }
+
+        .retro-login-button:after {
+            content: "ENTER →";
+            color: #ffff00;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 2px 2px #000080;
+            white-space: nowrap;
+        }
+
+        .retro-login-button:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+            50% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                border-color: #c0c0c0;
+            }
+            50% {
+                border-color: #ffff00;
+            }
+            100% {
+                border-color: #c0c0c0;
+            }
+        }
+
+        .retro-login-link:hover .retro-login-button {
+            background: linear-gradient(90deg, #0000a0, #0000ff, #0000a0);
+            transform: scale(1.05);
+        }
+
+        .retro-login-link:active .retro-login-button {
+            border-style: inset;
+            transform: scale(0.95);
+        }
+
+        /* Add these fun 90s decorative elements */
+        .retro-login-link::before {
+            content: "⚡";
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffff00;
+            text-shadow: 2px 2px #ff00ff;
+            animation: bounce 1s infinite;
+        }
+
+        .retro-login-link::after {
+            content: "⚡";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffff00;
+            text-shadow: 2px 2px #ff00ff;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-50%);
+            }
+            50% {
+                transform: translateY(-70%);
+            }
+        }
     </style>
   </head>
   <body>
     <div class="container">
-      <iframe style="float: left" src="https://giphy.com/embed/l0MYGF7X6D8Z55v20" width="130" height="100" frameBorder="0" class="giphy-embed"></iframe>
+      <iframe
+        style="float: left"
+        src="https://giphy.com/embed/l0MYGF7X6D8Z55v20"
+        width="130"
+        height="100"
+        frameborder="0"
+        class="giphy-embed"
+      ></iframe>
       <h1>🌟 Library 🌟</h1>
-      <img
-        src="/api/placeholder/88/31"
-        alt="Book animation"
-        style="float: right"
-      />
+
+      <a href="/login" class="retro-login-link" style="float: right">
+        <div class="retro-login-button"></div>
+      </a>
 
       <div class="counter">
         <span style="color: #00ff00">Visitors: 000372</span>
@@ -224,49 +343,49 @@
         </div>
       </div>
 
-    <div class="retro-table-container">
-      <div class="table-title">📚 Library Catalog</div>
-      <table class="retro-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>ISBN</th>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Publisher</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr data-page="1" th:each="book: ${books}">
-            <td>
-              <label><input type="checkbox" class="retro-checkbox" /></label>
-            </td>
-            <td th:text="${book.ISBN}"></td>
-            <td>
-              <div class="book-image">
-                <img th:src="@{'/images/' + ${book.imageUrl}}" />
-              </div>
-            </td>
-            <td th:text="${book.title}"></td>
-            <td th:text="${book.publisher}"></td>
-          </tr>
-          <!-- Example row for preview -->
-          <tr>
-            <td>
-              <label><input type="checkbox" class="retro-checkbox" /></label>
-            </td>
-            <td>978-0123456789</td>
-            <td>
-              <div class="book-image">
-                <img src="/api/placeholder/100/150" alt="Book cover" />
-              </div>
-            </td>
-            <td>Windows 95 For Dummies</td>
-            <td>IDG Books</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="retro-table-container">
+        <div class="table-title">📚 Library Catalog</div>
+        <table class="retro-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ISBN</th>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Publisher</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-page="1" th:each="book: ${books}">
+              <td>
+                <label><input type="checkbox" class="retro-checkbox" /></label>
+              </td>
+              <td th:text="${book.ISBN}"></td>
+              <td>
+                <div class="book-image">
+                  <img th:src="@{'/images/' + ${book.imageUrl}}" />
+                </div>
+              </td>
+              <td th:text="${book.title}"></td>
+              <td th:text="${book.publisher}"></td>
+            </tr>
+            <!-- Example row for preview -->
+            <tr>
+              <td>
+                <label><input type="checkbox" class="retro-checkbox" /></label>
+              </td>
+              <td>978-0123456789</td>
+              <td>
+                <div class="book-image">
+                  <img src="/api/placeholder/100/150" alt="Book cover" />
+                </div>
+              </td>
+              <td>Windows 95 For Dummies</td>
+              <td>IDG Books</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="under-construction">
         <img src="/api/placeholder/100/100" alt="Under Construction" />
         <br />

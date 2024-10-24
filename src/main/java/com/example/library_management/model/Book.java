@@ -2,6 +2,7 @@ package com.example.library_management.model;
 
 import jakarta.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,6 +15,17 @@ public class Book {
   private String language;
   private String imageUrl;
   private int numberOfPage;
+
+  @OneToMany(mappedBy = "book")
+  private List<BookItem> bookItems;
+
+  public List<BookItem> getBookItems() {
+    return bookItems;
+  }
+
+  public void setBookItems(List<BookItem> bookItems) {
+    this.bookItems = bookItems;
+  }
 
   @ManyToMany
   @JoinTable(
@@ -79,10 +91,10 @@ public class Book {
   }
 
   public String getImageUrl() {
-	return imageUrl;
+    return imageUrl;
   }
 
   public void setImageUrl(String imageUrl) {
-	this.imageUrl = imageUrl;
+    this.imageUrl = imageUrl;
   }
 }
