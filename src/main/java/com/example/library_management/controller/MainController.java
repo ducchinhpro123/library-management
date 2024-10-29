@@ -18,7 +18,7 @@ public class MainController {
     this.bookService = bookService;
   }
 
-  @GetMapping("/")
+  @GetMapping("/home")
   public String homePage(Model model ) {
     List<Book> books = bookService.findAllBooks();
     model.addAttribute("books", books);

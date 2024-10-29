@@ -7,7 +7,7 @@
   <body>
     <div class="login-window">
       <div class="title-bar">
-        <div class="title-bar-text">🔒 Login to Library System</div>
+        <div class="title-bar-text">🔒 Registration to Library System</div>
         <div class="title-bar-controls">
           <button class="title-bar-button">?</button>
           <button class="title-bar-button">_</button>
@@ -18,7 +18,7 @@
       </div>
 
       <div class="login-content">
-        <form onsubmit="return handleSubmit(event)">
+        <form method="POST" action="/registration">
           <div class="input-group">
             <label for="username">Username:</label>
             <input
@@ -36,6 +36,16 @@
               type="password"
               id="password"
               name="password"
+              class="input-field"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="repeat-password">Repeat Password:</label>
+            <input
+              type="password"
+              id="repeat-password"
+              name="repeat-password"
               class="input-field"
               required
             />
@@ -68,6 +78,7 @@
         </div>
       </div>
     </div>
+    <div th:text="${userNameAlreadyExist}"></div>
 
     <script>
       function handleSubmit(event) {

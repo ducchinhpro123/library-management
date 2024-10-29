@@ -1,0 +1,141 @@
+      body {
+        background: #000080;
+        font-family: "MS Sans Serif", Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-image: url("data:image/gif;base64,R0lGODlhCgAKAIAAAAAAAP///yH5BAEAAAEALAAAAAAKAAoAAAIRjI+py+0Po5y02ouz3rz7VgAAOw==");
+      }
+
+      .login-window {
+        width: 400px;
+        background: #c0c0c0;
+        border: 2px outset #ffffff;
+        padding: 2px;
+        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+      }
+
+      .title-bar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .title-bar-text {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 14px;
+        text-shadow: 1px 1px #000000;
+      }
+
+      .title-bar-controls {
+        display: flex;
+        gap: 2px;
+      }
+
+      .title-bar-button {
+        width: 16px;
+        height: 14px;
+        background: #c0c0c0;
+        border: 1px outset #ffffff;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .login-content {
+        padding: 20px;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 5px;
+        border: 2px inset #ffffff;
+        background: #ffffff;
+        font-family: "MS Sans Serif", Arial, sans-serif;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .win-button {
+        padding: 5px 20px;
+        background: #c0c0c0;
+        border: 2px outset #ffffff;
+        font-family: "MS Sans Serif", Arial, sans-serif;
+        cursor: pointer;
+      }
+
+      .win-button:active {
+        border-style: inset;
+      }
+
+      .status-bar {
+        background: #c0c0c0;
+        border-top: 2px groove #ffffff;
+        padding: 4px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .status-icon {
+        margin-right: 5px;
+      }
+
+      .help-text {
+        font-size: 12px;
+        color: #000080;
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      marquee {
+        background: #ff0000;
+        color: #ffff00;
+        padding: 3px;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+
+      .remember-me {
+        margin-top: 15px;
+      }
+
+      .remember-me input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 13px;
+        height: 13px;
+        background: #ffffff;
+        border: 2px inset #d4d0c8;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+
+      .remember-me input[type="checkbox"]:checked {
+        background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E") center/80% no-repeat;
+      }
