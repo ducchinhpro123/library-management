@@ -204,6 +204,15 @@
         }
 
         .retro-login-button:after {
+            content: "LOGOUT →";
+            color: #ffff00;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 2px 2px #000080;
+            white-space: nowrap;
+        }
+
+        .retro-login-button:after {
             content: "ENTER →";
             color: #ffff00;
             font-weight: bold;
@@ -307,8 +316,11 @@
       ></iframe>
       <h1>🌟 Library 🌟</h1>
 
-      <a href="/login" class="retro-login-link" style="float: right">
+      <a sec:authorize="!isAuthenticated()" href="/login" class="retro-login-link" style="float: right">
         <div class="retro-login-button"></div>
+      </a>
+      <a sec:authorize="isAuthenticated()" href="/logout" class"retro-login-link" style="float: right">
+        <div class="retro-logout-button">Logout</div>
       </a>
 
       <div class="counter">

@@ -7,11 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.library_management.model.Account;
 import com.example.library_management.model.AccountStatus;
-import com.example.library_management.model.Librarian;
 import com.example.library_management.model.Member;
 import com.example.library_management.repository.LibrarianRepository;
 import com.example.library_management.repository.MemberRepository;
@@ -48,12 +47,21 @@ public class AccountController {
       member.setStatus(AccountStatus.ACTIVE);
 
       memberRepository.save(member);
-
       return "redirect:/home";
+
     } else {
       model.addAttribute("userNameAlreadyExist", "username already taken, please choose another username");
       return "registration";
     }
-
   }
+
+  @GetMapping("/login")
+  public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+    if (error != null) {
+      model.addAttribute("errorMessage", "Invalid username or password.");
+    }
+
+    return "login";
+  }
+
 }

@@ -25,11 +25,6 @@ public class MainController {
     return "index";
   }
 
-  @GetMapping("/login")
-  public String login() {
-    return "login";
-  }
-
   //@PostMapping("/create-book")
   //public ResponseEntity<String> createBook(@RequestBody Book newBook, @RequestParam String authorName) {
   //  try {

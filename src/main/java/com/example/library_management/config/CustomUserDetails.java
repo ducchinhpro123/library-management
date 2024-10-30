@@ -51,6 +51,7 @@ public class CustomUserDetails implements UserDetailsService {
     if (account.getRole() == null) {
       return new String[] { "MEMBER" };
     }
+
     return account.getRole().split(" ");
   }
 

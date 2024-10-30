@@ -18,7 +18,7 @@
       </div>
 
       <div class="login-content">
-        <form onsubmit="return handleSubmit(event)">
+        <form method="POST" action="/login">
           <div class="input-group">
             <label for="username">Username:</label>
             <input
@@ -41,9 +41,9 @@
             />
           </div>
 
-          <div class="remember-me">
-            <label> <input type="checkbox" /> Remember my credentials </label>
-          </div>
+          <!--<div class="remember-me">-->
+          <!--  <label> <input type="checkbox" /> Remember my credentials </label>-->
+          <!--</div>-->
 
           <div class="button-group">
             <button type="button" class="win-button" onclick="handleCancel()">
@@ -63,6 +63,7 @@
           <span>Ready</span>
         </div>
 
+        <div class="help-text" th:text="${errorMessage}"></div>
         <div class="help-text">
           Press F1 for Help or contact System Administrator
         </div>
