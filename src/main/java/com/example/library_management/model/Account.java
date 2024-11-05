@@ -1,12 +1,19 @@
 package com.example.library_management.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Account {
   private String username;
   private String password;
-  private String role;
+  private List<AccountRole> roles;
+
+  public Account() {
+    this.roles = new ArrayList<>();
+  }
 
   private AccountStatus status;
 
@@ -34,11 +41,11 @@ public class Account {
     this.status = status;
   }
 
-  public String getRole() {
-    return role;
+  public List<AccountRole> getRoles() {
+    return roles;
   }
 
-  public void setRole(String role) {
-    this.role = role;
+  public void addRole(AccountRole role) {
+    roles.add(role);
   }
 }
