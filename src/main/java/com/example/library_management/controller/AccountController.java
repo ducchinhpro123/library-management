@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.library_management.model.Account;
+import com.example.library_management.model.AccountRole;
 import com.example.library_management.model.AccountStatus;
 import com.example.library_management.model.Member;
 import com.example.library_management.repository.LibrarianRepository;
@@ -31,7 +32,7 @@ public class AccountController {
 
   @GetMapping("/registration")
   public String registerAccount() {
-    return "registration";
+    return "register";
   }
 
   @PostMapping("/registration")
@@ -41,12 +42,15 @@ public class AccountController {
 
     if (!memberOption.isPresent()) {
       Member member = new Member();
-      member.setRole("USER");
       member.setUsername(account.getUsername());
+
+      member.addRole(AccountRole.MEMBER);
+
       member.setPassword(passwordEncoder.encode(account.getPassword()));
       member.setStatus(AccountStatus.ACTIVE);
 
       memberRepository.save(member);
+
       return "redirect:/home";
 
     } else {

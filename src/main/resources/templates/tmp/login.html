@@ -1,0 +1,123 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>🔒 Claude's Cyber Library - Login 🔒</title>
+    <link rel="stylesheet" href="/assets/css/auth.css" />
+  </head>
+  <body>
+    <div class="login-window">
+      <div class="title-bar">
+        <div class="title-bar-text">🔒 Login to Library System</div>
+        <div class="title-bar-controls">
+          <button class="title-bar-button">?</button>
+          <button class="title-bar-button">_</button>
+          <button class="title-bar-button">
+            <a href="/home">x</a>
+          </button>
+        </div>
+      </div>
+
+      <div class="login-content">
+        <form method="POST" action="/login">
+          <div class="input-group">
+            <label for="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="input-field"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="input-field"
+              required
+            />
+          </div>
+
+          <!--<div class="remember-me">-->
+          <!--  <label> <input type="checkbox" /> Remember my credentials </label>-->
+          <!--</div>-->
+
+          <div class="button-group">
+            <button type="button" class="win-button" onclick="handleCancel()">
+              Cancel
+            </button>
+            <button type="submit" class="win-button">OK</button>
+          </div>
+        </form>
+
+        <marquee scrollamount="3">
+          🌟 Welcome to Claude's Cyber Library - Your Gateway to Digital
+          Knowledge! 🌟
+        </marquee>
+
+        <div class="status-bar">
+          <span class="status-icon">💾</span>
+          <span>Ready</span>
+        </div>
+
+        <div class="help-text" th:text="${errorMessage}"></div>
+        <div class="help-text">
+          Press F1 for Help or contact System Administrator
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function handleSubmit(event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username && password) {
+          alert(
+            "Logging in... Please wait while system validates your credentials...",
+          );
+          // Here you would typically handle the form submission to your backend
+        }
+      }
+
+      function handleCancel() {
+        if (confirm("Are you sure you want to cancel login?")) {
+          document.getElementById("username").value = "";
+          document.getElementById("password").value = "";
+        }
+      }
+
+      // Add window drag behavior simulation
+      const titleBar = document.querySelector(".title-bar");
+      const loginWindow = document.querySelector(".login-window");
+      let isDragging = false;
+      let currentX;
+      let currentY;
+      let initialX;
+      let initialY;
+
+      titleBar.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        initialX = e.clientX - loginWindow.offsetLeft;
+        initialY = e.clientY - loginWindow.offsetTop;
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (isDragging) {
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+          loginWindow.style.left = currentX + "px";
+          loginWindow.style.top = currentY + "px";
+        }
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+    </script>
+  </body>
+</html>
