@@ -26,7 +26,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             (requests) ->
                 requests
-                    .requestMatchers("/home", "/registration", "/assets/**", "/images/**", "/login")
+                    .requestMatchers("/", "/registration", "/assets/**", "/images/**", "/login", "/book/**")
                     .permitAll()
                     .requestMatchers("/table", "/profile", "/blank")
                     .hasAnyRole("MEMBER", "ADMIN", "LIBRARIAN")
