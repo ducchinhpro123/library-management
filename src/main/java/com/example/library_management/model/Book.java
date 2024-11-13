@@ -72,13 +72,6 @@ public class Book {
     this.title = title;
   }
 
-  public String getSubject() {
-    return subject;
-  }
-
-  public void setSubeject(String subject) {
-    this.subject = subject;
-  }
 
   public String getPublisher() {
     return publisher;
