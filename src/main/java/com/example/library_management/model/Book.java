@@ -10,7 +10,10 @@ public class Book {
   @Id private String ISBN;
 
   private String title;
-  private String subject;
+
+  @OneToMany(mappedBy="book")
+  private Set<Subject> subjects = new LinkedHashSet<>();
+
   private String publisher;
   private String language;
   private String imageUrl;
