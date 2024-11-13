@@ -2,6 +2,7 @@ package com.example.library_management.service;
 
 import com.example.library_management.model.Author;
 import com.example.library_management.repository.AuthorRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,10 @@ public class AuthorService {
 
   public AuthorService(AuthorRepository authorRepository) {
     this.authorRepository = authorRepository;
+  }
+
+  public List<Author> authors() {
+    return authorRepository.findAll();
   }
 
   public void createAuthor(Author newAuthor) throws IllegalArgumentException {
