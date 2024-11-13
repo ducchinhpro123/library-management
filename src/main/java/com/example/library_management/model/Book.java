@@ -31,13 +31,13 @@ public class Book {
     this.description = description;
   }
   @OneToMany(mappedBy = "book")
-  private List<BookItem> bookItems;
+  private Set<BookItem> bookItems;
 
-  public List<BookItem> getBookItems() {
+  public Set<BookItem> getBookItems() {
     return bookItems;
   }
 
-  public void setBookItems(List<BookItem> bookItems) {
+  public void setBookItems(Set<BookItem> bookItems) {
     this.bookItems = bookItems;
   }
 
