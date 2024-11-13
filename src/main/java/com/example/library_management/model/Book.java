@@ -2,13 +2,15 @@ package com.example.library_management.model;
 
 import jakarta.persistence.*;
 import java.util.LinkedHashSet;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class Book {
-  @Id private String ISBN;
+public class Book implements Serializable {
 
+//  private static final long serialVersionUID = -3254406057751181181L;
+
+  @Id private String ISBN;
   private String title;
 
   @OneToMany(mappedBy="book")
@@ -30,6 +32,7 @@ public class Book {
   public void setDescription(String description) {
     this.description = description;
   }
+
   @OneToMany(mappedBy = "book")
   private Set<BookItem> bookItems;
 
