@@ -5,6 +5,9 @@ import com.example.library_management.model.*;
 import com.example.library_management.repository.AuthorRepository;
 import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
+
+import jakarta.transaction.Transactional;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -55,6 +58,7 @@ public class BookService {
     return fileName;
   }
 
+  @Transactional
   public void saveBookWithoutAuthor(BookDTO bookDTO) {
     try {
       Book book = new Book();
@@ -63,7 +67,12 @@ public class BookService {
       book.setPublisher(bookDTO.getPublisher());
       book.setLanguage(bookDTO.getLanguage());
       book.setNumberOfPage(bookDTO.getNumberOfPage());
-      book.setSubjects(bookDTO.getSubjects());
+      book.setDescription(bookDTO.getDescription());
+
+      for (Subject subject : bookDTO.getSubjects()) {
+        System.out.println(subject.getName());
+        book.saveSubject(subject);
+      };
 
       try {
         String fileName = saveImage(bookDTO.getImage());
@@ -123,13 +132,13 @@ public class BookService {
       book.setISBN(newBook.getISBN());
       book.setLanguage(newBook.getLanguage());
       //  ------- WARNING --------
-      book.getSubjects().clear();
-      for (Subject subject : newBook.getSubjects()) {
-        subject.setBook(book);
-        book.getSubjects().add(subject);
-      }
+//      book.getSubjects().clear();
+//      for (Subject subject : newBook.getSubjects()) {
+//        subject.setBook(book);
+//        book.getSubjects().add(subject);
+//      }
 
-      book.setSubjects(newBook.getSubjects());
+//      book.setSubjects(newBook.getSubjects());
       //   -----------------------
 
       book.setPublisher(newBook.getPublisher());
