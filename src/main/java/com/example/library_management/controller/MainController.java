@@ -16,7 +16,7 @@ public class MainController {
     this.bookService = bookService;
   }
 
-  @GetMapping("/home")
+  @GetMapping("/")
   public String homePage(Model model) {
     List<Book> books = bookService.findAllBooks();
     model.addAttribute("books", books);
@@ -26,11 +26,6 @@ public class MainController {
   @GetMapping("/profile")
   public String profilePage() {
     return "profile";
-  }
-
-  @GetMapping("/table")
-  public String tablePage() {
-    return "table";
   }
 
   @GetMapping("/blank")
