@@ -1,16 +1,22 @@
 package com.example.library_management.service;
 
-import com.example.library_management.model.Author;
-import com.example.library_management.model.Book;
-import com.example.library_management.model.BookAuthor;
-import com.example.library_management.model.BookAuthorId;
+import com.example.library_management.dto.BookDTO;
+import com.example.library_management.model.*;
 import com.example.library_management.repository.AuthorRepository;
 import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BookService {
@@ -28,8 +34,48 @@ public class BookService {
   }
 
   public List<Book> findAllBooks() {
-    List<Book> books = bookRepository.findAll();
-    return books;
+    return bookRepository.findAll();
+  }
+
+  private String saveImage(MultipartFile image) {
+    String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+    try {
+      String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+      Path uploadPath = Paths.get(uploadDir);
+      if (Files.exists(uploadPath)) {
+        Files.createDirectories(uploadPath);
+      }
+      try (InputStream inputStream = image.getInputStream()) {
+        Files.copy(
+            inputStream, Paths.get(uploadDir + fileName), StandardCopyOption.REPLACE_EXISTING);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return fileName;
+  }
+
+  public void saveBookWithoutAuthor(BookDTO bookDTO) {
+    try {
+      Book book = new Book();
+      book.setISBN(bookDTO.getISBN());
+      book.setTitle(bookDTO.getTitle());
+      book.setPublisher(bookDTO.getPublisher());
+      book.setLanguage(bookDTO.getLanguage());
+      book.setNumberOfPage(bookDTO.getNumberOfPage());
+      book.setSubjects(bookDTO.getSubjects());
+
+      try {
+        String fileName = saveImage(bookDTO.getImage());
+        book.setImageUrl(fileName);
+      } catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
+
+      bookRepository.save(book);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
+    }
   }
 
   public void createBook(Book newBook, String authorName) throws IllegalArgumentException {
@@ -76,7 +122,16 @@ public class BookService {
       book.setTitle(newBook.getTitle());
       book.setISBN(newBook.getISBN());
       book.setLanguage(newBook.getLanguage());
-      book.setSubeject(newBook.getSubject());
+      //  ------- WARNING --------
+      book.getSubjects().clear();
+      for (Subject subject : newBook.getSubjects()) {
+        subject.setBook(book);
+        book.getSubjects().add(subject);
+      }
+
+      book.setSubjects(newBook.getSubjects());
+      //   -----------------------
+
       book.setPublisher(newBook.getPublisher());
       book.setNumberOfPage(newBook.getNumberOfPage());
       bookRepository.save(book);
