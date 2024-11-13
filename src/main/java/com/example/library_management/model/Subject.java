@@ -3,6 +3,9 @@ package com.example.library_management.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "subjects", schema = "library")
 public class Subject {
@@ -13,6 +16,9 @@ public class Subject {
   @Size(max = 200)
   @Column(name = "name", length = 200)
   private String name;
+
+  @ManyToMany(mappedBy = "subjects")
+  private Set<Book> books = new LinkedHashSet<>();
 
   public Integer getId() {
     return id;
@@ -30,16 +36,11 @@ public class Subject {
     this.name = name;
   }
 
-  @ManyToOne
-  @JoinColumn(name = "book_isbn", nullable = true)
-  private Book book;
+  public Set<Book> getBooks() {
+    return books;
+  }
 
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
+  public void setBooks(Set<Book> books) {
+    this.books = books;
+  }
 }
-
