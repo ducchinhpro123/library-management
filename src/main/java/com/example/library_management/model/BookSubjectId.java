@@ -2,16 +2,18 @@ package com.example.library_management.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.Hibernate;
 
+import java.io.Serial;
 import java.util.Objects;
 
 @Embeddable
 public class BookSubjectId implements java.io.Serializable {
+    @Serial
     private static final long serialVersionUID = -2949929869388281960L;
+
     @Size(max = 255)
     @NotNull
     @Column(name = "book_isbn", nullable = false)
