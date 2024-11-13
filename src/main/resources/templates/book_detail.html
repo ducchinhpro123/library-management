@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{index}" lang="en">
+
+<head>
+    <title>Book Detail</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h1 class="my-4 fw-bold" th:text="${book.title}"><br /></h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <img class="img-fluid" th:src="@{'/images/' + ${book.imageUrl}}" alt="Alt Text" />
+                </div>
+
+                <div class="col-md-4">
+                    <h3 class="my-3">Description</h3>
+                    <p th:text="${book.description}"></p>
+                    <h3 class="my-3">About author</h3>
+                    <ul class="list-unstyled">
+                        <li class="fw-bold" th:text="${author.name}"></li>
+                        <li th:text="${author.description}"></li>
+                    </ul>
+
+                    <h3 class="my-3">Subject</h3>
+                    <!--<ul class="list-unstyled">-->
+                    <!--    <li class="fw-bold" th:text="${author.subject}"></li>-->
+                    <!--</ul>-->
+                </div>
+            </div>
+            <h3 class="my-4">Related Books<br /></h3>
+            <div class="row">
+                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
+                            src="http://placehold.it/500x300" /></a></div>
+                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
+                            src="http://placehold.it/500x300" /></a></div>
+                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
+                            src="http://placehold.it/500x300" /></a></div>
+                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
+                            src="http://placehold.it/500x300" /></a></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
