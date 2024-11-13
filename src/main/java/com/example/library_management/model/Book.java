@@ -16,6 +16,19 @@ public class Book implements Serializable {
   @OneToMany(mappedBy="book")
   private Set<Subject> subjects = new LinkedHashSet<>();
 
+  public void saveSubject(Subject subject) {
+    this.subjects.add(subject);
+    subject.getBooks().add(this);
+  }
+
+  public void removeSubject(Integer subjectId) {
+    Subject subject = this.subjects.stream().filter(subj -> subj.getId() == subjectId).findFirst().orElse(null);
+    if (subject != null) {
+      this.subjects.remove(subject);
+      subject.getBooks().remove(this);
+    }
+  }
+
   private String publisher;
   private String language;
   private String imageUrl;
