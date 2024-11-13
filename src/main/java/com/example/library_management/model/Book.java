@@ -72,6 +72,13 @@ public class Book {
     this.title = title;
   }
 
+  //public Set<String> getSubjects() {
+  //  return subjects;
+  //}
+  //
+  //public void setSubejects(Set<String> subjects) {
+  //  this.subjects = subjects;
+  //}
 
   public String getPublisher() {
     return publisher;
@@ -104,4 +111,12 @@ public class Book {
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
   }
+
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
+    }
 }
