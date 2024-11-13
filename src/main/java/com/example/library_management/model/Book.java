@@ -19,6 +19,17 @@ public class Book {
   private String imageUrl;
   private int numberOfPage;
 
+  @Lob
+  @Column(name = "description", columnDefinition = "TEXT")
+  private String description;
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
   @OneToMany(mappedBy = "book")
   private List<BookItem> bookItems;
 
