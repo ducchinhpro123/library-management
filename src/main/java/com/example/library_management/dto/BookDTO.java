@@ -14,8 +14,10 @@ public class BookDTO {
     private String ISBN;
     private String title;
 
-    @OneToMany(mappedBy="book")
+    @ManyToMany
+    @JoinTable(name="book_subjects", joinColumns = @JoinColumn(name = "book_isbn"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private Set<Subject> subjects = new LinkedHashSet<>();
+
 
     private String publisher;
     private String language;
