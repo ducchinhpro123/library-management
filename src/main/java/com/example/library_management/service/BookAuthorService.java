@@ -14,6 +14,6 @@ public class BookAuthorService {
   }
 
   public Optional<Author> findAuthorByBookIsbn(String isbn) {
-      return bookAuthorRepository.findAuthorByBookISBN(isbn);
+    return bookAuthorRepository.findAuthorByBookISBN(isbn);
   }
 }
