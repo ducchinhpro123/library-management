@@ -4,118 +4,128 @@ import com.example.library_management.model.Author;
 import com.example.library_management.model.BookItem;
 import com.example.library_management.model.Subject;
 import jakarta.persistence.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
 public class BookDTO {
-    @Id
-    private String ISBN;
-    private String title;
+  @Id private String ISBN;
+  private String title;
 
-    @ManyToMany
-    @JoinTable(name="book_subjects", joinColumns = @JoinColumn(name = "book_isbn"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private Set<Subject> subjects = new LinkedHashSet<>();
+  @ManyToMany
+  @JoinTable(
+      name = "book_subjects",
+      joinColumns = @JoinColumn(name = "book_isbn"),
+      inverseJoinColumns = @JoinColumn(name = "subject_id"))
+  private Set<Subject> subjects = new LinkedHashSet<>();
 
+  private String publisher;
+  private String language;
+  private int numberOfPage;
 
-    private String publisher;
-    private String language;
-    private int numberOfPage;
+  @Lob
+  @Column(name = "description", columnDefinition = "TEXT")
+  private String description;
 
-    @Lob
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+  private MultipartFile image;
 
-    private MultipartFile image;
+  private String imageUrl;
 
-    public String getDescription() {
-        return description;
-    }
+  public String getImageUrl() {
+    return imageUrl;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
 
-    @OneToMany(mappedBy = "book")
-    private Set<BookItem> bookItems;
+  public String getDescription() {
+    return description;
+  }
 
-    public Set<BookItem> getBookItems() {
-        return bookItems;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setBookItems(Set<BookItem> bookItems) {
-        this.bookItems = bookItems;
-    }
+  @OneToMany(mappedBy = "book")
+  private Set<BookItem> bookItems;
 
-    @ManyToMany
-    @JoinTable(
-            name = "book_author",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors = new LinkedHashSet<>();
+  public Set<BookItem> getBookItems() {
+    return bookItems;
+  }
 
-    public Set<Author> getAuthors() {
-        return authors;
-    }
+  public void setBookItems(Set<BookItem> bookItems) {
+    this.bookItems = bookItems;
+  }
 
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
-    }
+  @ManyToMany
+  @JoinTable(
+      name = "book_author",
+      joinColumns = @JoinColumn(name = "book_id"),
+      inverseJoinColumns = @JoinColumn(name = "author_id"))
+  private Set<Author> authors = new LinkedHashSet<>();
 
-    public String getISBN() {
-        return ISBN;
-    }
+  public Set<Author> getAuthors() {
+    return authors;
+  }
 
-    public void setISBN(String iSBN) {
-        ISBN = iSBN;
-    }
+  public void setAuthors(Set<Author> authors) {
+    this.authors = authors;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public String getISBN() {
+    return ISBN;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public void setISBN(String iSBN) {
+    ISBN = iSBN;
+  }
 
-    public String getPublisher() {
-        return publisher;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getLanguage() {
-        return language;
-    }
+  public String getPublisher() {
+    return publisher;
+  }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+  public void setPublisher(String publisher) {
+    this.publisher = publisher;
+  }
 
-    public int getNumberOfPage() {
-        return numberOfPage;
-    }
+  public String getLanguage() {
+    return language;
+  }
 
-    public void setNumberOfPage(int numberOfPage) {
-        this.numberOfPage = numberOfPage;
-    }
+  public void setLanguage(String language) {
+    this.language = language;
+  }
 
-    public Set<Subject> getSubjects() {
-        return subjects;
-    }
+  public int getNumberOfPage() {
+    return numberOfPage;
+  }
 
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
-    }
+  public void setNumberOfPage(int numberOfPage) {
+    this.numberOfPage = numberOfPage;
+  }
 
-    public MultipartFile getImage() {
-        return image;
-    }
+  public Set<Subject> getSubjects() {
+    return subjects;
+  }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
-    }
+  public void setSubjects(Set<Subject> subjects) {
+    this.subjects = subjects;
+  }
+
+  public MultipartFile getImage() {
+    return image;
+  }
+
+  public void setImage(MultipartFile image) {
+    this.image = image;
+  }
 }
