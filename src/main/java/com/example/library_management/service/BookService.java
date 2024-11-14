@@ -5,9 +5,7 @@ import com.example.library_management.model.*;
 import com.example.library_management.repository.AuthorRepository;
 import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
-
 import jakarta.transaction.Transactional;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -17,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +44,7 @@ public class BookService {
     try {
       String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/";
       Path uploadPath = Paths.get(uploadDir);
-      if (Files.exists(uploadPath)) {
+      if (!Files.exists(uploadPath)) {
         Files.createDirectories(uploadPath);
       }
       try (InputStream inputStream = image.getInputStream()) {
@@ -56,6 +55,88 @@ public class BookService {
       throw new RuntimeException(e);
     }
     return fileName;
+  }
+
+  private boolean removeImage(String fileName) {
+    try {
+      String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+      Path pat = Paths.get(uploadDir + fileName);
+      if (Files.isDirectory(pat)) {
+        throw new RuntimeException("Cannot delete a directory: " + fileName);
+      }
+      if (Files.notExists(pat)) {
+        return false;
+      } else {
+        Files.delete(pat);
+        return true;
+      }
+    } catch (IOException e) {
+      System.err.println("Failed to delete file: " + fileName + " - " + e.getMessage());
+      return false;
+    }
+  }
+
+//  Cannot invoke "String.isEmpty()" because the return value of "com.example.library_management.model.Book.getImageUrl()" is null
+//  java.nio.file.DirectoryNotEmptyException: /home/voducchinh/Github/library-management/src/main/resources/static/images
+
+  @Transactional
+  public void update(BookDTO dto) throws Exception {
+    String isbn = dto.getISBN();
+    if (!bookRepository.existsById(isbn)) {
+      try {
+        saveBookWithoutAuthor(dto);
+      } catch (Exception e) {
+        throw new Exception("There is an error while saving a book " + e.getMessage());
+      }
+    } else {
+      Optional<Book> bookOp = bookRepository.findById(isbn);
+      if (bookOp.isPresent()) {
+        Book book = bookOp.get();
+        if (!Objects.equals(book.getImageUrl(), dto.getImage().getOriginalFilename())) {
+            // Remove the old image of book.getImageUrl()
+            if (book.getImageUrl() != null && !book.getImageUrl().isEmpty()) {
+                if (removeImage(book.getImageUrl())) {
+                  System.out.println("Deleted image: " + book.getImageUrl());
+                } else {
+                    System.out.println("Failed to delete image: " + book.getImageUrl() + ". Will try to override it.");
+                }
+            }
+          // Saving new image of dto.getImageUrl
+          String newFileName = saveImage(dto.getImage());
+          book.setImageUrl(newFileName);
+
+        } else {
+          String fileName = StringUtils.cleanPath(Objects.requireNonNull(dto.getImage().getOriginalFilename()));
+          System.out.println(fileName);
+          book.setImageUrl(fileName);
+        }
+        book.setISBN(dto.getISBN());
+        book.setTitle(dto.getTitle());
+        for (Subject subject : dto.getSubjects()) {
+          book.saveSubject(subject);
+        }
+        book.setLanguage(dto.getLanguage());
+        book.setNumberOfPage(dto.getNumberOfPage());
+        bookRepository.save(book);
+
+      } else {
+          throw new Exception("There is an error occur while trying to find the book in the database");
+      }
+    }
+  }
+
+  public void removeBookByIsbn(String isbn) {
+    try {
+      if (bookRepository.existsById(isbn)) {
+        bookRepository.deleteById(isbn);
+      } else {
+        throw new RuntimeException("Book with ISBN " + isbn + " does not exist.");
+      }
+    } catch (EmptyResultDataAccessException e) {
+      throw new RuntimeException("No book found with ISBN " + isbn, e);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
+    }
   }
 
   @Transactional
@@ -70,9 +151,8 @@ public class BookService {
       book.setDescription(bookDTO.getDescription());
 
       for (Subject subject : bookDTO.getSubjects()) {
-        System.out.println(subject.getName());
         book.saveSubject(subject);
-      };
+      }
 
       try {
         String fileName = saveImage(bookDTO.getImage());
@@ -132,13 +212,13 @@ public class BookService {
       book.setISBN(newBook.getISBN());
       book.setLanguage(newBook.getLanguage());
       //  ------- WARNING --------
-//      book.getSubjects().clear();
-//      for (Subject subject : newBook.getSubjects()) {
-//        subject.setBook(book);
-//        book.getSubjects().add(subject);
-//      }
+      //      book.getSubjects().clear();
+      //      for (Subject subject : newBook.getSubjects()) {
+      //        subject.setBook(book);
+      //        book.getSubjects().add(subject);
+      //      }
 
-//      book.setSubjects(newBook.getSubjects());
+      //      book.setSubjects(newBook.getSubjects());
       //   -----------------------
 
       book.setPublisher(newBook.getPublisher());
