@@ -92,7 +92,7 @@ public class BookService {
       Optional<Book> bookOp = bookRepository.findById(isbn);
       if (bookOp.isPresent()) {
         Book book = bookOp.get();
-        if (!Objects.equals(book.getImageUrl(), dto.getImage().getOriginalFilename())) {
+        if (!dto.getImage().isEmpty()) {
             // Remove the old image of book.getImageUrl()
             if (book.getImageUrl() != null && !book.getImageUrl().isEmpty()) {
                 if (removeImage(book.getImageUrl())) {
@@ -105,11 +105,12 @@ public class BookService {
           String newFileName = saveImage(dto.getImage());
           book.setImageUrl(newFileName);
 
-        } else {
-          String fileName = StringUtils.cleanPath(Objects.requireNonNull(dto.getImage().getOriginalFilename()));
-          System.out.println(fileName);
-          book.setImageUrl(fileName);
-        }
+        } 
+        // else {
+        //   String fileName = StringUtils.cleanPath(Objects.requireNonNull(dto.getImage().getOriginalFilename()));
+        //   System.out.println(fileName);
+        //   book.setImageUrl(fileName);
+        // }
         book.setISBN(dto.getISBN());
         book.setTitle(dto.getTitle());
         for (Subject subject : dto.getSubjects()) {
