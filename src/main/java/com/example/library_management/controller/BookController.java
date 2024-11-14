@@ -3,20 +3,19 @@ package com.example.library_management.controller;
 import com.example.library_management.dto.BookDTO;
 import com.example.library_management.model.Author;
 import com.example.library_management.model.Book;
-import com.example.library_management.model.Subject;
 import com.example.library_management.repository.SubjectRepository;
 import com.example.library_management.service.AuthorService;
 import com.example.library_management.service.BookAuthorService;
 import com.example.library_management.service.BookService;
-import java.util.HashMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 // @RestController("/api")
 @Controller
@@ -26,10 +25,14 @@ public class BookController {
   private final SubjectRepository subjectRepository;
   private final AuthorService authorService;
 
-  public BookController(BookService bookService, BookAuthorService bookAuthorService, SubjectRepository subjectRepository, AuthorService authorService) {
+  public BookController(
+      BookService bookService,
+      BookAuthorService bookAuthorService,
+      SubjectRepository subjectRepository,
+      AuthorService authorService) {
     this.bookService = bookService;
     this.bookAuthorService = bookAuthorService;
-      this.subjectRepository = subjectRepository;
+    this.subjectRepository = subjectRepository;
     this.authorService = authorService;
   }
 
@@ -54,11 +57,10 @@ public class BookController {
       bookService.saveBookWithoutAuthor(bookDTO);
       model.addAttribute("message", "Book created successfully.");
       return "redirect:/table";
-    } catch(IllegalArgumentException e) {
-        model.addAttribute("message", "Invalid input: " + e.getMessage());
-        return "redirect:/new-book";
-    }
-    catch (Exception e) {
+    } catch (IllegalArgumentException e) {
+      model.addAttribute("message", "Invalid input: " + e.getMessage());
+      return "redirect:/new-book";
+    } catch (Exception e) {
       e.printStackTrace();
       model.addAttribute("message", e.getMessage());
       return "redirect:/new-book";
@@ -74,13 +76,69 @@ public class BookController {
     dto.setNumberOfPage(book.getNumberOfPage());
     dto.setDescription(book.getDescription());
 
+    return dto;
+  }
 
-  @GetMapping("/book/{isbn}") // 
-  public String viewDetailBook(@PathVariable("isbn") String isbn, Model model) {
+  @PostMapping("/update-book")
+  public String postUpdateBook(@ModelAttribute BookDTO dto, RedirectAttributes redirect) {
+    System.out.println(dto.getISBN());
+    try {
+      bookService.update(dto);
+      redirect.addFlashAttribute("message", "Updated successful");
+      System.out.println("BookController.postUpdateBook()");
+      return "redirect:/table";
+    } catch (Exception e) {
+      // WARNING: Don't do this in production
+      redirect.addFlashAttribute("message", e.getMessage());
+      return "redirect:/table";
+    }
+  }
+
+  @GetMapping("/update-book/{isbn}")
+  public String updateBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect, Model model) {
+    try {
+      Optional<Book> book = bookService.getBook(isbn);
+      if (book.isPresent()) {
+
+        BookDTO dto = convertBookToDTO(book.get());
+        String pat = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+        Path path = Paths.get(pat + book.get().getImageUrl());
+
+        if (Files.exists(path)) {
+          dto.setImageUrl(book.get().getImageUrl());
+        }
+
+        model.addAttribute("subjects", subjectRepository.findAll());
+        model.addAttribute("book", dto);
+        return "update_book";
+      } else {
+        return "redirect:/";
+      }
+    } catch (Exception e) {
+      return "redirect:/";
+    }
+  }
+
+  @GetMapping("/delete-book/{isbn}")
+  public String deleteBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect) {
+    try {
+      bookService.removeBookByIsbn(isbn);
+      redirect.addFlashAttribute(
+          "message", "Book with ISBN " + isbn + " was successfully deleted.");
+      return "redirect:/table";
+    } catch (Exception e) {
+      redirect.addFlashAttribute("message", "Can not delete the book with isbn." + e.getMessage());
+      return "redirect:/404";
+    }
+  }
+
+  @GetMapping("/book/{isbn}") //
+  public String viewDetailBook(
+      @PathVariable("isbn") String isbn, Model model, RedirectAttributes redirect) {
     Optional<Book> book = bookService.getBook(isbn);
     // th:if="${book}"
     if (book.isPresent()) {
-      //System.out.println(book.get().getTitle());
+      // System.out.println(book.get().getTitle());
       Optional<Author> author = bookAuthorService.findAuthorByBookIsbn(isbn);
       if (author.isPresent()) {
         model.addAttribute("author", author.get());
@@ -89,53 +147,54 @@ public class BookController {
       }
       model.addAttribute("book", book.get());
     } else {
-      // th:if="${message}"
-      model.addAttribute("message", "Can not found any book with that isbn: " + isbn);
+      redirect.addFlashAttribute("message", "Can not found any book with that isbn: " + isbn);
+      return "redirect:/404";
     }
 
     return "book_detail";
   }
 
-  @PostMapping("/create-book")
-  public ResponseEntity<String> createBook(
-      @RequestBody Book newBook, @RequestParam String authorName) {
-    try {
-      bookService.createBook(newBook, authorName);
-      return new ResponseEntity<>("Book created successfully.", HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @DeleteMapping("/delete-book")
-  public ResponseEntity<String> deleteBook(@RequestParam(name = "isbn") String isbn) {
-    try {
-      bookService.deleteBook(isbn);
-      return new ResponseEntity<>("Book deleted successfully.", HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @PutMapping("/edit-book")
-  public ResponseEntity<String> updateBook(@RequestBody Book book) {
-    try {
-      String isbn = book.getISBN();
-      bookService.updateBook(isbn, book);
-      return new ResponseEntity<>("Book updated successfully.", HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @GetMapping("/get-book")
-  public ResponseEntity<?> getBook(@RequestParam(name = "isbn") String isbn) {
-    Optional<Book> book = bookService.getBook(isbn);
-    if (book.isPresent()) return new ResponseEntity<>(book.get(), HttpStatus.OK);
-    else {
-      Map<String, String> message = new HashMap<>();
-      message.put("message", "Can not found the book with the isbn: " + isbn);
-      return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-    }
-  }
+  /* ------------------------------------ REST_API ------------------------------------*/
+  // @PostMapping("/create-book")
+  // public ResponseEntity<String> createBook(
+  //    @RequestBody Book newBook, @RequestParam String authorName) {
+  //  try {
+  //    bookService.createBook(newBook, authorName);
+  //    return new ResponseEntity<>("Book created successfully.", HttpStatus.CREATED);
+  //  } catch (Exception e) {
+  //    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+  //  }
+  // }
+  //
+  // @DeleteMapping("/delete-book")
+  // public ResponseEntity<String> deleteBook(@RequestParam(name = "isbn") String isbn) {
+  //  try {
+  //    bookService.deleteBook(isbn);
+  //    return new ResponseEntity<>("Book deleted successfully.", HttpStatus.OK);
+  //  } catch (Exception e) {
+  //    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+  //  }
+  // }
+  //
+  // @PutMapping("/edit-book")
+  // public ResponseEntity<String> updateBook(@RequestBody Book book) {
+  //  try {
+  //    String isbn = book.getISBN();
+  //    bookService.updateBook(isbn, book);
+  //    return new ResponseEntity<>("Book updated successfully.", HttpStatus.OK);
+  //  } catch (Exception e) {
+  //    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+  //  }
+  // }
+  //
+  // @GetMapping("/get-book")
+  // public ResponseEntity<?> getBook(@RequestParam(name = "isbn") String isbn) {
+  //  Optional<Book> book = bookService.getBook(isbn);
+  //  if (book.isPresent()) return new ResponseEntity<>(book.get(), HttpStatus.OK);
+  //  else {
+  //    Map<String, String> message = new HashMap<>();
+  //    message.put("message", "Can not found the book with the isbn: " + isbn);
+  //    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+  //  }
+  // }
 }
