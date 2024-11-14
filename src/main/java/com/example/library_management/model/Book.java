@@ -11,7 +11,10 @@ public class Book {
   private String title;
 
   @ManyToMany
-  @JoinTable(name="book_subjects", joinColumns = @JoinColumn(name = "book_isbn"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+  @JoinTable(
+      name = "book_subjects",
+      joinColumns = @JoinColumn(name = "book_isbn"),
+      inverseJoinColumns = @JoinColumn(name = "subject_id"))
   private Set<Subject> subjects = new LinkedHashSet<>();
 
   public void saveSubject(Subject subject) {
@@ -61,6 +64,19 @@ public class Book {
       joinColumns = @JoinColumn(name = "book_id"),
       inverseJoinColumns = @JoinColumn(name = "author_id"))
   private Set<Author> authors = new LinkedHashSet<>();
+
+  public void saveAuthor(Author author) {
+    this.authors.add(author);
+    author.getBooks().add(this);
+  }
+
+  public void removeAuthor(Integer authorId) {
+    Author author = this.authors.stream().filter(auth -> auth.getId() == authorId).findFirst().orElse(null);
+    if (author != null) {
+      this.authors.remove(author);
+      author.getBooks().remove(this);
+    }
+  }
 
   public Set<Author> getAuthors() {
     return authors;
