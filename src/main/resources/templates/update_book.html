@@ -3,13 +3,14 @@
     layout:decorate="~{index}" lang="en">
 
 <head>
-    <title>404</title>
+    <title>Update</title>
 </head>
 
 <body>
     <div layout:fragment="content" class="container mt-5 col-8">
-        <h2 class="mb-4">Add New Book</h2>
-        <form th:object="${book}" th:action="@{/new-book}" method="post" enctype="multipart/form-data">
+        <h2 class="mb-4l">Update Book</h2>
+
+        <form th:object="${book}" th:action="@{/update-book}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="isbn" class="form-label">ISBN:</label>
                 <input type="text" id="isbn" th:field="*{ISBN}" class="form-control" required>
@@ -37,8 +38,15 @@
 
             <div class="mb-3">
                 <label for="image" class="form-label">Image:</label>
+                <input type="text" id="image-text" th:field="*{imageUrl}" class="form-control" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Image:</label>
+                <p class="alert alert-warning">Leave it if you do not want to change the image</p>
                 <input type="file" id="image" th:field="*{image}" class="form-control">
             </div>
+
 
             <div class="mb-3">
                 <label for="description" class="form-label">Description:</label>
@@ -52,7 +60,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create Book</button>
+            <button type="submit" class="btn btn-primary">Update Book</button>
         </form>
     </div>
 </body>

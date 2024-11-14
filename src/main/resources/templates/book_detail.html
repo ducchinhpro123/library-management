@@ -19,10 +19,12 @@
                     <h3 class="my-3">Description</h3>
                     <p th:text="${book.description}"></p>
                     <h3 class="my-3">About author</h3>
-                    <ul class="list-unstyled">
-                        <li class="fw-bold" th:text="${author.name}"></li>
-                        <li th:text="${author.description}"></li>
-                    </ul>
+                    <div th:if="${author !=  null}">
+                        <ul class="list-unstyled">
+                            <li class="fw-bold" th:text="${author.name}"></li>
+                            <li th:text="${author.description}"></li>
+                        </ul>
+                    </div>
 
                     <h3 class="my-3">Subject</h3>
                     <!--<ul class="list-unstyled">-->
