@@ -65,6 +65,14 @@ public class BookController {
     }
   }
 
+  private BookDTO convertBookToDTO(Book book) {
+    BookDTO dto = new BookDTO();
+    dto.setISBN(book.getISBN());
+    dto.setTitle(book.getTitle());
+    dto.setPublisher(book.getPublisher());
+    dto.setLanguage(book.getLanguage());
+    dto.setNumberOfPage(book.getNumberOfPage());
+    dto.setDescription(book.getDescription());
 
 
   @GetMapping("/book/{isbn}") // 
