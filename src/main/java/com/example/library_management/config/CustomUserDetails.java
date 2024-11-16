@@ -1,9 +1,10 @@
 package com.example.library_management.config;
 
-import com.example.library_management.model.Account;
 import com.example.library_management.model.AccountRole;
+import com.example.library_management.model.Admin;
 import com.example.library_management.model.Librarian;
 import com.example.library_management.model.Member;
+import com.example.library_management.repository.AdminRepository;
 import com.example.library_management.repository.LibrarianRepository;
 import com.example.library_management.repository.MemberRepository;
 import java.util.List;
@@ -14,17 +15,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.example.library_management.model.Account;
 
 @Service
 public class CustomUserDetails implements UserDetailsService {
 
   private final LibrarianRepository librarianRepository;
   private final MemberRepository memberRepository;
+  private final AdminRepository adminRepository;
 
   public CustomUserDetails(
-      LibrarianRepository librarianRepository, MemberRepository memberRepository) {
+      LibrarianRepository librarianRepository, 
+      AdminRepository adminRepository,
+      MemberRepository memberRepository) {
     this.librarianRepository = librarianRepository;
     this.memberRepository = memberRepository;
+    this.adminRepository = adminRepository;
   }
 
   @Override
@@ -46,6 +52,16 @@ public class CustomUserDetails implements UserDetailsService {
           .roles(getRoles(member.get()).toArray(new String[0]))
           .build();
     }
+
+    Optional<Admin> admin = adminRepository.getAdminByUsername(username);
+    if (admin.isPresent()) {
+      return User.builder()
+          .username(admin.get().getUsername())
+          .password(admin.get().getPassword())
+          .roles(getRoles(admin.get()).toArray(new String[0]))
+          .build();
+    }
+
     throw new UsernameNotFoundException("Username are given but not found");
   }
 

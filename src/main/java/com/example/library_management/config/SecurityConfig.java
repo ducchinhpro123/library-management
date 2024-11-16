@@ -28,10 +28,13 @@ public class SecurityConfig {
                 requests
                     .requestMatchers("/", "/registration", "/assets/**", "/images/**", "/login", "/book/**")
                     .permitAll()
-                    .requestMatchers("/table", "/profile", "/blank")
-                    .hasAnyRole("MEMBER", "ADMIN", "LIBRARIAN")
+  // ROLE_MEMBER,    |
+  // ROLE_LIBRARIAN, | Three fundamental roles define in AccountRole
+  // ROLE_ADMIN,     | 
+                    .requestMatchers("/table", "/blank").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/profile").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER", "ROLE_LIBRARIAN")
                     .anyRequest()
-                    .authenticated())
+                    .authenticated()).exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
         .formLogin((form) -> form.loginPage("/login").permitAll())
         .logout(LogoutConfigurer::permitAll)
         .build();
