@@ -27,9 +27,11 @@
                     </div>
 
                     <h3 class="my-3">Subject</h3>
-                    <!--<ul class="list-unstyled">-->
-                    <!--    <li class="fw-bold" th:text="${author.subject}"></li>-->
-                    <!--</ul>-->
+                    <ul class="list-unstyled" th:each="subject : ${book.subjects}">
+                        <li class="fw-bold" >
+                            <span th:text="${subject.name}" class="badge bg-primary">Primary</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <h3 class="my-4">Related Books<br /></h3>
