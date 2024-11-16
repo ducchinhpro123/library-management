@@ -1,5 +1,6 @@
 package com.example.library_management.controller;
 
+import com.example.library_management.annotation.CheckAdmin;
 import com.example.library_management.dto.BookDTO;
 import com.example.library_management.model.Author;
 import com.example.library_management.model.Book;
@@ -12,6 +13,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +41,12 @@ public class BookController {
     this.authorService = authorService;
   }
 
-  /* The table page summary books */
+  /**
+   * NOTE: About the CheckAdmin annotation: it is denoted that only admin have
+   * this permission to perform this action.
+  */
+
+  @CheckAdmin
   @GetMapping("/table")
   public String tablePage(Model model) {
     List<Book> books = bookService.findAllBooks();
@@ -44,6 +54,7 @@ public class BookController {
     return "table";
   }
 
+  @CheckAdmin
   @GetMapping("/new-book")
   public String newBookPage(Model model) {
     model.addAttribute("book", new BookDTO());
@@ -51,6 +62,7 @@ public class BookController {
     return "new_book";
   }
 
+  @CheckAdmin
   @PostMapping("/new-book")
   public String newBook(@ModelAttribute BookDTO bookDTO, Model model) {
     try {
@@ -79,13 +91,12 @@ public class BookController {
     return dto;
   }
 
+  @CheckAdmin
   @PostMapping("/update-book")
   public String postUpdateBook(@ModelAttribute BookDTO dto, RedirectAttributes redirect) {
-    System.out.println(dto.getISBN());
     try {
       bookService.update(dto);
       redirect.addFlashAttribute("message", "Updated successful");
-      System.out.println("BookController.postUpdateBook()");
       return "redirect:/table";
     } catch (Exception e) {
       // WARNING: Don't do this in production
@@ -94,31 +105,39 @@ public class BookController {
     }
   }
 
+  @CheckAdmin
   @GetMapping("/update-book/{isbn}")
   public String updateBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect, Model model) {
-    try {
-      Optional<Book> book = bookService.getBook(isbn);
-      if (book.isPresent()) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    boolean isAdmin = auth.getAuthorities().stream().anyMatch(granted -> granted.getAuthority().equals("ROLE_ADMIN"));
+    if (isAdmin) {
+      try {
+        Optional<Book> book = bookService.getBook(isbn);
+        if (book.isPresent()) {
 
-        BookDTO dto = convertBookToDTO(book.get());
-        String pat = System.getProperty("user.dir") + "/src/main/resources/static/images/";
-        Path path = Paths.get(pat + book.get().getImageUrl());
+          BookDTO dto = convertBookToDTO(book.get());
+          String pat = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+          Path path = Paths.get(pat + book.get().getImageUrl());
 
-        if (Files.exists(path)) {
-          dto.setImageUrl(book.get().getImageUrl());
+          if (Files.exists(path)) {
+            dto.setImageUrl(book.get().getImageUrl());
+          }
+
+          model.addAttribute("subjects", subjectRepository.findAll());
+          model.addAttribute("book", dto);
+          return "update_book";
+        } else {
+          return "redirect:/";
         }
-
-        model.addAttribute("subjects", subjectRepository.findAll());
-        model.addAttribute("book", dto);
-        return "update_book";
-      } else {
+      } catch (Exception e) {
         return "redirect:/";
       }
-    } catch (Exception e) {
-      return "redirect:/";
+    } else {
+        return "redirect:/403";
     }
   }
 
+  @CheckAdmin
   @GetMapping("/delete-book/{isbn}")
   public String deleteBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect) {
     try {
@@ -133,12 +152,10 @@ public class BookController {
   }
 
   @GetMapping("/book/{isbn}") //
-  public String viewDetailBook(
-      @PathVariable("isbn") String isbn, Model model, RedirectAttributes redirect) {
+  public String viewDetailBook(@PathVariable("isbn") String isbn, Model model, RedirectAttributes redirect) {
     Optional<Book> book = bookService.getBook(isbn);
     // th:if="${book}"
     if (book.isPresent()) {
-      // System.out.println(book.get().getTitle());
       Optional<Author> author = bookAuthorService.findAuthorByBookIsbn(isbn);
       if (author.isPresent()) {
         model.addAttribute("author", author.get());
