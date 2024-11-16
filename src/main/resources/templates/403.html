@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{index}" lang="en">
+
+<head>
+    <title>403</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <div class="text-center mt-5">
+                <div class="error mx-auto" data-text="404">
+                    <p class="m-0">403</p>
+                </div>
+                <p class="text-dark mb-5 lead">Sorry, you don't have enough permission to access this page.</p>
+                <p class="text-black-50 mb-0" th:text="${message}"></p><a href="/">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
