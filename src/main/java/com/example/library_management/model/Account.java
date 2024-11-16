@@ -1,7 +1,7 @@
 package com.example.library_management.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.MappedSuperclass;
 
@@ -9,10 +9,11 @@ import jakarta.persistence.MappedSuperclass;
 public class Account {
   private String username;
   private String password;
-  private List<AccountRole> roles;
+
+  private Set<AccountRole> roles;
 
   public Account() {
-    this.roles = new ArrayList<>();
+    this.roles = new HashSet<>();
   }
 
   private AccountStatus status;
@@ -41,11 +42,16 @@ public class Account {
     this.status = status;
   }
 
-  public List<AccountRole> getRoles() {
+  public Set<AccountRole> getRoles() {
     return roles;
+  }
+
+  public void setRoles(Set<AccountRole> roles) {
+    this.roles = roles;
   }
 
   public void addRole(AccountRole role) {
     roles.add(role);
   }
+
 }
