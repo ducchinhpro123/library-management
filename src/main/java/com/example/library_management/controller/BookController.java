@@ -50,6 +50,7 @@ public class BookController {
   @GetMapping("/table")
   public String tablePage(Model model) {
     List<Book> books = bookService.findAllBooks();
+
     model.addAttribute("books", books);
     return "table";
   }
@@ -149,6 +150,25 @@ public class BookController {
       redirect.addFlashAttribute("message", "Can not delete the book with isbn." + e.getMessage());
       return "redirect:/404";
     }
+  }
+
+  @GetMapping("/api/book/filter/")
+  public String filter(
+      @RequestParam("title") String title, 
+      @RequestParam("publisher") String publisher, 
+      @RequestParam("isbn") String isbn, 
+      Model model) {
+
+    // public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
+    List<Book> books = bookService.filterIsbnTitlePublisher(isbn, title, publisher);
+
+    if (books.size() == 0 || books.isEmpty()) {
+      model.addAttribute("message", "Book not found");
+    }
+
+    model.addAttribute("books", books);
+
+    return "index";
   }
 
   @GetMapping("/book/{isbn}") //
