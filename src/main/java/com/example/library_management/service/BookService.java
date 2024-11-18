@@ -39,6 +39,27 @@ public class BookService {
     return bookRepository.findAll();
   }
 
+  public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
+    try {
+      List<Book> books = bookRepository.findBooksByISBNContainingAndTitleContainingAndPublisherContaining(isbn, title, publisher);
+      return books;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public List<Book> findBookByTitle(String kw) {
+    try {
+      List<Book> books = bookRepository.findByTitle(kw);
+      return books;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+    
+  }
+
   private String saveImage(MultipartFile image) {
     String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
     try {
