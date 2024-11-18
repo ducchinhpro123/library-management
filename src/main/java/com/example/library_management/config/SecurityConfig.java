@@ -31,7 +31,7 @@ public class SecurityConfig {
   // ROLE_MEMBER,    |
   // ROLE_LIBRARIAN, | Three fundamental roles define in AccountRole
   // ROLE_ADMIN,     | 
-                    .requestMatchers("/table", "/blank").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/table", "/blank").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                     .requestMatchers("/profile").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER", "ROLE_LIBRARIAN")
                     .anyRequest()
                     .authenticated()).exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
