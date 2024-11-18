@@ -5,10 +5,10 @@ import com.example.library_management.repository.AdminRepository;
 import com.example.library_management.repository.LibrarianRepository;
 import com.example.library_management.repository.MemberRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +51,35 @@ public class AccountService {
     } else {
       throw new Exception("Account with username " + username + " already exists.");
     }
+  }
+
+  public Optional<Librarian> findLibrarianByUsername(String username) {
+    Optional<Librarian> librarian = librarianRepository.getLibrarianByUsername(username);
+    if (librarian.isPresent()) {
+      return librarian;
+    }
+    return Optional.empty();
+  }
+
+  public Optional<Member> findMemberByUsername(String username) {
+    Optional<Member> member = memberRepository.getMemberByUsername(username);
+    if (member.isPresent()) {
+      return member;
+    }
+    return Optional.empty();
+  }
+
+
+  public Optional<Admin> findAdminByUsername(String username) {
+    Optional<Admin> admin = adminRepository.getAdminByUsername(username);
+    if (admin.isPresent()) {
+      return admin;
+    }
+    return Optional.empty();
+  }
+
+  public void saveUserDetails(UserDetails userDetails) {
+    // TODO: implement this method
   }
 
   public void saveAdmin(Account account) throws Exception {
