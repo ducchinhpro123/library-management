@@ -1,8 +1,8 @@
 package com.example.library_management.config;
 
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+// import org.aspectj.lang.ProceedingJoinPoint;
+// import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -20,7 +20,7 @@ public class AspectConfig {
     public void checkAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(granted -> granted.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(granted -> granted.getAuthority().contains("ROLE_ADMIN"));
         if (!isAdmin) {
             throw new AccessDeniedException("Access Denied: Admin role required");
         }
