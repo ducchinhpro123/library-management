@@ -1,81 +1,103 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light" lang="en"
-    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+                                                                xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+                                                                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Dashboard - Brand</title>
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Dashboard - Brand</title>
+        <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/filterable_card.css">
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+        <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    </head>
 
-<body id="page-top">
-    <div id="wrapper">
-        <nav th:replace="~{fragments/nav_left}"> </nav>
-        <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content">
+    <body id="page-top">
+        <div id="wrapper">
+            <nav th:replace="~{fragments/nav_left}"> </nav>
+            <div class="d-flex flex-column" id="content-wrapper">
+                <div id="content">
 
-                <nav th:replace="~{fragments/nav_top}"></nav>
+                    <nav th:replace="~{fragments/nav_top}"></nav>
 
-                <!--<div class="container-fluid">-->
-                <!--    <h3 class="text-dark mb-1">Blank Page</h3>-->
-                <!--</div>-->
+                    <!--<div class="container-fluid">-->
+                    <!--    <h3 class="text-dark mb-1">Blank Page</h3>-->
+                    <!--</div>-->
 
-                <div class="container" layout:fragment="content">
-                    <section>
-                        <div class="container">
-                            <div class="row">
-                                <div th:each="book : ${books}" class="col-auto col-sm-12 col-md-12 col-lg-4 col-xl-4"
-                                    style="padding-top: 15px;padding-bottom: 15px;padding-right: 15px;padding-left: 15px;">
+                    <div class="container" layout:fragment="content">
+                        <section class="py-5">
+                            <div class="container">
+                                <h1 class="text-center mb-4">FILTERABLE BOOKS</h1>
+                                <form id="filter-form" class="filter-controls text-center lead text-uppercase mb-3 col-md-6" 
+                                    method="GET" action="/api/book/filter/">
 
-                                    <div class="bg-light border rounded shadow card"><img class="card-img-top"
-                                            th:src="@{'/images/' + ${book.imageUrl}}" />
-                                        <div class="card-body">
-                                            <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
-                                                <h3 class="card-title" th:text="${book.title}"
-                                                    style="font-family: Antic, sans-serif;color: rgb(81,87,94);">Lorem
-                                                    Ipsum
-                                                </h3>
-                                            </a>
-                                            <!--<h5 class="card-sub-title" th:if="${book.subjects.length > 1}"-->
-                                            <!--    style="font-family: Antic, sans-serif;color: #38ae53;">-->
-                                            <!--    <p th:each="subject : ${book.subjects}">-->
-                                            <!--        <button class="btn" type="button"-->
-                                            <!--            style="font-weight: normal; font-family: Antic, sans-serif;">-->
-                                            <!--            <span class="badge bg-success" th:text="${subject.name}"></span>-->
-                                            <!--            <i class="icon-social-linkedin"></i>-->
-                                            <!--        </button>-->
-                                            <!--    </p>-->
-                                            <!--</h5>-->
-                                            <p class="card-text"
-                                                style="font-family: Antic, sans-serif;color: rgb(81,87,94);"></p>
-                                            <p id="lorem" th:text="${#strings.abbreviate(book.description, 150)}"></p>
+                                    <input id="isbn" class="input form-control" name="isbn" placeholder="isbn">
+                                    <input id="title" class="input form-control" name="title" placeholder="title">
+                                    <input id="publisher" class="input form-control" name="publisher" placeholder="publisher">
+                                    <!-- <span class="active d-inline-block mx-3 py-1 position-relative" data-filter="all">all </span> -->
+                                    <!-- <span class="d-inline-block mx-3 py-1 position-relative" data-filter="1">category 1 </span> -->
+                                    <!-- <span class="d-inline-block mx-3 py-1 position-relative" data-filter="2">category 2 </span> -->
+                                    <!-- <span class="d-inline-block mx-3 py-1 position-relative" data-filter="3">category 3 </span> -->
+                                    <button id="filter-button">Filter</button>
+                                </form>
 
-                                            <!--<td><p th:text="${#strings.abbreviate(blog.text,150)} "></p></td>-->
+                                <div class="row filtr-container" >
+                                    <div class="col-md-6 col-lg-4 filtr-item" data-category="2,3" th:each="book : ${books}">
+                                        <div class="card border-dark">
+                                            <div class="card-header bg-dark text-light">
+                                                <h5 class="m-0" th:text="${book.title}">Lorem Ipsum</h5>
+                                            </div>
 
-
+                                            <!-- <img class="card-img-top" th:src="@{'/images/' + ${book.imageUrl}}" /> -->
+                                            <img class="img-fluid card-img w-100 d-block rounded-0" th:src="@{'/images/' + ${book.imageUrl}}" />
+                                            <div class="card-body">
+                                                <p class="card-text" th:text="${#strings.abbreviate(book.description, 150)}">
+                                                </p>
+                                            </div>
+                                            <div class="d-flex card-footer">
+                                                <button class="btn btn-dark btn-sm" type="button"><i class="fa fa-eye"></i> Borrow now</button>
+                                                <button class="btn btn-outline-dark btn-sm ms-auto" type="button">
+                                                    <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
+                                                        <i class="fa fa-eye"></i> Detail
+                                                    </a>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                            <article class="bg-light text-dark py-4 mt-5 border-top border-bottom border-dark">
+                                <div class="container">
+                                    <div th:if="${message}">
+                                        <h1>Informations</h1>
+                                        <p th:text="${message}"></p>
+                                        <!-- <p>Add &quot;<strong>data-filter</strong>&quot; attribute to filter control element<br /></p> -->
+                                        <!-- <p>Output example: <em>&lt;span data-filter=&quot;4&quot;&gt;Category name&lt;/span&gt;</em><br /></p> -->
+                                        <!-- <p>Add &quot;<strong>data-category</strong>&quot; attribute to .filtr-item element with the number of the filter<br /></p> -->
+                                        <!-- <p>Output example: <em>&lt;div class=&quot;filtr-item&quot; data-category=&quot;4&quot;&gt;...&lt;/div&gt;</em><br /></p> -->
+                                        <!-- <p>Card in multiple categories: <em>&lt;div class=&quot;filtr-item&quot; data-category=&quot;</em><strong><em>4,5</em></strong><em>&quot;&gt;...&lt;/div&gt; (separate with comma)</em><br /></p> -->
+                                        <!-- <h3>Documentation</h3> -->
+                                        <!-- <p class="text-uppercase"><a href="http://yiotis.net/filterizr/" target="_blank">filterizr website<br /></a></p> -->
+                                        <!-- <p class="text-end small">Photos by <a href="https://unsplash.com/photos/4nulm-JUYFo?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank"><em>Averie Woodard</em></a></p> -->
+
+                                    </div>
+                                </div>
+                            </article>
+                        </section>
+                    </div>
                 </div>
-            </div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
-                </div>
-            </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="assets/js/theme.js"></script>
-</body>
+                <footer class="bg-white sticky-footer">
+                    <div class="container my-auto">
+                        <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
+                    </div>
+                </footer>
+            </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div>
+        <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/js/bs-init.js"></script>
+        <script src="/assets/js/theme.js"></script>
+    </body>
 
 </html>
