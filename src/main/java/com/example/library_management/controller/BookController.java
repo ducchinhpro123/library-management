@@ -4,6 +4,8 @@ import com.example.library_management.annotation.CheckAdmin;
 import com.example.library_management.dto.BookDTO;
 import com.example.library_management.model.Author;
 import com.example.library_management.model.Book;
+import com.example.library_management.model.BookLending;
+
 import com.example.library_management.repository.SubjectRepository;
 import com.example.library_management.service.AuthorService;
 import com.example.library_management.service.BookAuthorService;
@@ -14,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -171,6 +172,10 @@ public class BookController {
     return "index";
   }
 
+
+  // <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
+  //     <i class="fa fa-eye"></i> Detail
+  // </a>
   @GetMapping("/book/{isbn}") //
   public String viewDetailBook(@PathVariable("isbn") String isbn, Model model, RedirectAttributes redirect) {
     Optional<Book> book = bookService.getBook(isbn);
