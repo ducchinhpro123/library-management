@@ -12,11 +12,25 @@
         <div class="row mb-3">
             <div class="col-lg-4">
                 <div class="card mb-3">
-                    <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
-                            src="assets/img/dogs/image2.jpeg" width="160" height="160">
-                        <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
-                                Photo</button></div>
-                    </div>
+                    <form method="POST" th:action="@{/update-avatar}" th:object="${dto}" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{roles}" th:value="${dto.roles}" readonly >
+                        <input type="hidden" th:field="*{username}" th:value="${dto.username}" readonly >
+                                                                  <!-- <input type="file" id="image" th:field="*{image}" class="form-control"> -->
+                        <div class="card-body text-center shadow">
+                            <span th:if="${dto.image != null}">
+                                <img class="img-fluid card-img w-100 d-block rounded-0" th:src="@{'/avatar/' + ${dto.image}}" />
+                            </span>
+
+                            <span th:if="${dto.image == null or dto.image.isEmpty()}">
+                                <img class="rounded-circle mb-3 mt-4" src="/assets/img/dogs/image2.jpeg" width="160" height="160" />
+                            </span>
+
+                            <input type="file" id="image" th:field="*{imageFile}" class="form-control">
+
+                            <div class="mb-3 mt-3"><button class="btn btn-primary btn-sm" type="submit">Change
+                                    Photo</button></div>
+                        </div>
+                    </form>
                 </div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -91,31 +105,44 @@
                                 <p class="text-primary m-0 fw-bold">User Settings</p>
                             </div>
                             <div class="card-body">
-                                <form>
+                                <form th:object="${account}" method="POST" th:action="@{/update-profile}">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label"
-                                                                     for="username"><strong>Username</strong></label><input
-                                                    class="form-control" type="text" id="username" th:value="${account.username}"
-                                                    placeholder="user.name" name="username"></div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="username"><strong>Username</strong></label>
+                                                <input class="form-control" type="text" id="username" th:value="${account.username}"
+                                                    placeholder="user.name" name="username" readonly>
+
+                                            </div>
                                         </div>
+
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="email"><strong>Email
-                                                        Address</strong></label><input class="form-control" type="email"
-                                                    id="email" placeholder="user@example.com" name="email"></div>
+                                            <div class="mb-3">
+                                            <label class="form-label" for="roles"><strong>Roles</strong></label>
+                                            <input class="form-control" type="text" id="roles" th:field="*{roles}"
+                                                placeholder="Roles" name="roles" readonly>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="first_name"><strong>First
-                                                        Name</strong></label><input class="form-control" type="text"
-                                                    id="first_name" placeholder="John" name="first_name"></div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="firstName"><strong>First
+                                                        Name</strong>
+                                                </label>
+                                                <input class="form-control" type="text" th:field="*{firstName}"
+                                                    id="firstName" placeholder="John">
+                                            </div>
                                         </div>
                                         <div class="col">
                                             <div class="mb-3"><label class="form-label" for="last_name"><strong>Last
                                                         Name</strong></label><input class="form-control" type="text"
-                                                    id="last_name" placeholder="Doe" name="last_name"></div>
+                                                    id="last_name" placeholder="Doe" name="last_name" th:field="*{lastName}">
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div th:if="${message}">
+                                        <p th:text="${message}"></p>
                                     </div>
                                     <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save
                                             Settings</button></div>
