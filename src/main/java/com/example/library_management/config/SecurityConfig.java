@@ -26,7 +26,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             (requests) ->
                 requests
-                    .requestMatchers("/", "/registration", "/assets/**", "/images/**", "/login", "/book/**")
+                    .requestMatchers("/", "/registration", "/assets/**", "/images/**", "/login", "/book/**", "api/book/filter/*")
                     .permitAll()
   // ROLE_MEMBER,    |
   // ROLE_LIBRARIAN, | Three fundamental roles define in AccountRole
@@ -35,7 +35,7 @@ public class SecurityConfig {
                     .requestMatchers("/profile").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER", "ROLE_LIBRARIAN")
                     .anyRequest()
                     .authenticated()).exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
-        .formLogin((form) -> form.loginPage("/login").permitAll())
+        .formLogin((form) -> form.loginPage("/login").defaultSuccessUrl("/").permitAll())
         .logout(LogoutConfigurer::permitAll)
         .build();
   }
