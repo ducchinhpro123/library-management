@@ -2,6 +2,7 @@ package com.example.library_management.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.MappedSuperclass;
 
@@ -12,6 +13,11 @@ public class Account {
   private String firstName;
   private String lastName;
   private String image;
+
+  @Override
+  public String toString() {
+    return this.username + " " + this.firstName + " " + this.lastName;
+  }
 
   private Set<AccountRole> roles;
 
@@ -79,5 +85,9 @@ public class Account {
   
   public void setImage(String image) {
     this.image = image;
+  }
+
+  public String getRolesString() {
+    return roles.stream().map(AccountRole::name).collect(Collectors.joining(","));
   }
 }
