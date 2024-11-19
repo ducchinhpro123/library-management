@@ -4,4 +4,4 @@
 
 ## Database
 
-![database](library-database.png)
+![database](admin.png)
