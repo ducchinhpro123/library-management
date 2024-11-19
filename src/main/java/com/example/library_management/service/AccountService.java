@@ -1,16 +1,29 @@
 package com.example.library_management.service;
 
+import com.example.library_management.dto.AccountDTO;
 import com.example.library_management.model.*;
 import com.example.library_management.repository.AdminRepository;
 import com.example.library_management.repository.LibrarianRepository;
 import com.example.library_management.repository.MemberRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.security.auth.login.AccountNotFoundException;
+
+import org.springframework.util.StringUtils;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AccountService {
@@ -78,8 +91,130 @@ public class AccountService {
     return Optional.empty();
   }
 
-  public void saveUserDetails(UserDetails userDetails) {
-    // TODO: implement this method
+  private String saveImage(MultipartFile image) {
+    String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+    try {
+      String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/avatar/";
+      Path uploadPath = Paths.get(uploadDir);
+
+      if (!Files.exists(uploadPath)) {
+        Files.createDirectories(uploadPath);
+      }
+      try (InputStream inputStream = image.getInputStream()) {
+        Files.copy(
+            inputStream, Paths.get(uploadDir + fileName), StandardCopyOption.REPLACE_EXISTING);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return fileName;
+  }
+
+  private void removeImage(String fileName) {
+    try {
+      String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/avatar/";
+      Path pat = Paths.get(uploadDir + fileName);
+      if (Files.isDirectory(pat)) {
+        throw new RuntimeException("Cannot delete a directory: " + fileName);
+      }
+      if (Files.notExists(pat)) {
+        throw new RuntimeException("Cannot delete a file that didn't exists: " + fileName);
+      } else {
+        Files.delete(pat);
+      }
+    } catch (IOException e) {
+      System.err.println("Failed to delete file: " + fileName + " - " + e.getMessage());
+    }
+  }
+
+  public boolean updateAvatar(AccountDTO account, AccountRole role) throws Exception {
+    switch (role) {
+      case ADMIN:  {
+                     Admin admin = adminRepository.getAdminByUsername(account.getUsername())
+                       .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+                     try {
+
+                       if (admin.getImage() != account.getImage()) removeImage(admin.getImage());
+
+                       String newFileName = saveImage(account.getImageFile());
+                       admin.setImage(newFileName);
+                       adminRepository.save(admin);
+                       return true;
+                     } catch (Exception e) {
+                       throw new Exception(e);
+                     }
+      }
+      case LIBRARIAN: {
+                     Librarian lib  = librarianRepository.getLibrarianByUsername(account.getUsername())
+                       .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+                     try {
+                       String newFileName = saveImage(account.getImageFile());
+                       lib.setImage(newFileName);
+                       return true;
+                     } catch (Exception e) {
+                       throw new Exception(e);
+                     }
+      }
+      case MEMBER: {
+                     Member mem  = memberRepository.getMemberByUsername(account.getUsername())
+                       .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+                     try {
+                       String newFileName = saveImage(account.getImageFile());
+                       mem.setImage(newFileName);
+                       return true;
+                     } catch (Exception e) {
+                       throw new Exception(e);
+                     }
+
+      }
+      default: throw new AccountNotFoundException("Account not found");
+    }
+  }
+
+  public boolean updateaccountLibrarian(Account account) throws Exception {
+    String username = account.getUsername();
+    Librarian lib = librarianRepository.getLibrarianByUsername(username)
+      .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+
+    try {
+      lib.setFirstName(account.getFirstName());
+      lib.setLastName(account.getLastName());
+      librarianRepository.save(lib);
+      return true;
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public boolean updateAccountMember(Account account) throws Exception {
+    String username = account.getUsername();
+    Member member = memberRepository.getMemberByUsername(username)
+      .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+
+    try {
+      member.setFirstName(account.getFirstName());
+      member.setLastName(account.getLastName());
+      memberRepository.save(member);
+      return true;
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public boolean updateAccountAdmin(Account account) throws Exception {
+    String username = account.getUsername();
+    Admin admin = adminRepository.getAdminByUsername(username)
+      .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+
+    try {
+      admin.setFirstName(account.getFirstName());
+      admin.setLastName(account.getLastName());
+      adminRepository.save(admin);
+      return true;
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
+
   }
 
   public void saveAdmin(Account account) throws Exception {
