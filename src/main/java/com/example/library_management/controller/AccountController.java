@@ -173,14 +173,16 @@ public class AccountController {
   }
 
   @PostMapping("/admin/registration")
-  public String registerForAdmin(@ModelAttribute Account account, Model model) throws Exception {
+  public String registerForAdmin(@ModelAttribute Account account, RedirectAttributes re) throws Exception {
+    List<AccountRole> roles = Arrays.asList(AccountRole.values());
     try {
       accountService.saveAccountWithPermission(account);
-      model.addAttribute("message", "Account created successfully.");
+      re.addFlashAttribute("message", "Account created successfully.");
+      re.addFlashAttribute("roles", roles);
       return "register_admin";
     } catch(Exception e) {
-      model.addAttribute("message", e.getMessage());
-      return "register_admin";
+      re.addFlashAttribute("message", e.getMessage());
+      return "redirect:/admin/registration";
     }
   }
 
