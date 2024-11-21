@@ -2,6 +2,7 @@ package com.example.library_management.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BookItem {
   @ManyToOne private Book book;
 
   @OneToMany(mappedBy = "bookItem")
-  private List<BookLending> bookLendings;
+  private List<BookLending> bookLendings = new ArrayList<>();
 
   public Book getBook() {
     return book;
