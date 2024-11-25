@@ -22,6 +22,15 @@ public class BookItem {
   @OneToMany(mappedBy = "bookItem")
   private List<BookLending> bookLendings = new ArrayList<>();
 
+
+  public void setId(int id) {
+    this.id = id;
+  }
+  
+  public int getId() {
+    return this.id;
+  }
+
   public Book getBook() {
     return book;
   }
