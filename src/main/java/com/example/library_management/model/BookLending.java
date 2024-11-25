@@ -29,8 +29,12 @@ public class BookLending {
         return bookItem;
     }
 
-    public void setBookItem(BookItem bookItem) {
+    public boolean setBookItem(BookItem bookItem) {
+        if (bookItem.isReferenceOnly()) {
+            return false;
+        }
         this.bookItem = bookItem;
+        return true;
     }
 
     public Librarian getLibrarian() {
