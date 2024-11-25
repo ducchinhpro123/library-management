@@ -1,6 +1,8 @@
 package com.example.library_management.model;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -9,6 +11,14 @@ public class Book {
 
   @Id private String ISBN;
   private String title;
+  private String publisher;
+  private String language;
+  private String imageUrl;
+  private int numberOfPage;
+
+  @Lob
+  @Column(name = "description", columnDefinition = "TEXT")
+  private String description;
 
   @ManyToMany
   @JoinTable(
@@ -30,15 +40,6 @@ public class Book {
     }
   }
 
-  private String publisher;
-  private String language;
-  private String imageUrl;
-  private int numberOfPage;
-
-  @Lob
-  @Column(name = "description", columnDefinition = "TEXT")
-  private String description;
-
   public String getDescription() {
     return description;
   }
@@ -48,7 +49,7 @@ public class Book {
   }
 
   @OneToMany(mappedBy = "book")
-  private Set<BookItem> bookItems;
+  private Set<BookItem> bookItems = new HashSet<>();
 
   public Set<BookItem> getBookItems() {
     return bookItems;
@@ -56,6 +57,18 @@ public class Book {
 
   public void setBookItems(Set<BookItem> bookItems) {
     this.bookItems = bookItems;
+  }
+
+  public void saveBookItem(BookItem bookItem) {
+    this.bookItems.add(bookItem);
+    // bookItem.setBook(this);
+  }
+
+  public void removeBookItem(Integer bookItemId) {
+    BookItem bookItem = this.bookItems.stream().filter(b -> b.getId() == bookItemId).findFirst().orElse(null);
+    if (bookItem != null) {
+      this.bookItems.remove(bookItem);
+    }
   }
 
   @ManyToMany
