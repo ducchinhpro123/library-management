@@ -35,15 +35,16 @@
                 </div>
             </div>
             <h3 class="my-4">Related Books<br /></h3>
+            
             <div class="row">
-                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
-                            src="http://placehold.it/500x300" /></a></div>
-                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
-                            src="http://placehold.it/500x300" /></a></div>
-                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
-                            src="http://placehold.it/500x300" /></a></div>
-                <div class="col-sm-6 col-md-3 mb-4"><a href="#"><img class="img-fluid"
-                            src="http://placehold.it/500x300" /></a></div>
+
+                <div class="col-sm-6 col-md-3 mb-4" th:each="book : ${books}">
+                    <a href="#">
+                        <img class="img-fluid" th:src="@{'/images/' + ${book.imageUrl}}" alt="Alt Text" />
+                        <!-- <img class="img-fluid" src="http://placehold.it/500x300" /> -->
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
