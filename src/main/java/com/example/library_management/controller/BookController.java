@@ -4,7 +4,8 @@ import com.example.library_management.annotation.CheckAdmin;
 import com.example.library_management.dto.BookDTO;
 import com.example.library_management.model.Author;
 import com.example.library_management.model.Book;
-import com.example.library_management.model.BookLending;
+// import com.example.library_management.model.BookLending;
+import com.example.library_management.model.Subject;
 
 import com.example.library_management.repository.SubjectRepository;
 import com.example.library_management.service.AuthorService;
@@ -22,6 +23,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 // @RestController("/api")
 @Controller
@@ -176,6 +182,13 @@ public class BookController {
   // <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
   //     <i class="fa fa-eye"></i> Detail
   // </a>
+  
+  // private List<Book> getBookRelatedSubjects(Book book) {
+  //   List<Book> books = new LinkedList<>();
+
+  //   return books;
+  // }
+
   @GetMapping("/book/{isbn}") //
   public String viewDetailBook(@PathVariable("isbn") String isbn, Model model, RedirectAttributes redirect) {
     Optional<Book> book = bookService.getBook(isbn);
@@ -188,6 +201,30 @@ public class BookController {
         model.addAttribute("author", null);
       }
       model.addAttribute("book", book.get());
+      if (book.get().getSubjects().size() > 1 || !book.get().getSubjects().isEmpty()) {
+        Set<Subject> subjects = book.get().getSubjects();
+
+        Set<Book> books = new HashSet<>();
+
+        for (Subject subject : subjects) {
+          List<Book> subjectRelatedBooks = bookService.getBookRelatedSubjects(subject);
+          if (!subjectRelatedBooks.isEmpty()) {
+            for (Book b : subjectRelatedBooks) {
+              if (b.equals(book.get())) {
+                continue;
+              }
+              books.add(b);
+            }
+          }
+        }
+
+        // for (Book b : books) {
+        //   System.out.println(b.getTitle());
+        // }
+        model.addAttribute("books", books);
+      }
+      // getBookRelatedSubjects(book.get());
+
     } else {
       redirect.addFlashAttribute("message", "Can not found any book with that isbn: " + isbn);
       return "redirect:/404";
