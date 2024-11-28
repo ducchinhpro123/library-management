@@ -4,12 +4,16 @@ import com.example.library_management.model.AccountRole;
 import com.example.library_management.model.Admin;
 import com.example.library_management.model.Librarian;
 import com.example.library_management.model.Member;
+import com.example.library_management.model.AccountStatus;
+
 import com.example.library_management.repository.AdminRepository;
 import com.example.library_management.repository.LibrarianRepository;
 import com.example.library_management.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,33 +37,50 @@ public class CustomUserDetails implements UserDetailsService {
     this.adminRepository = adminRepository;
   }
 
+  private boolean isAccountPermit(AccountStatus accountStatus) {
+    return !(accountStatus == AccountStatus.BLACKLISTED || accountStatus == AccountStatus.CANCELED
+        ||accountStatus == AccountStatus.NONE || accountStatus == AccountStatus.CLOSED);
+  }
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<Librarian> librarian = librarianRepository.getLibrarianByUsername(username);
     if (librarian.isPresent()) {
-      return User.builder()
+      if (isAccountPermit(librarian.get().getStatus())) {
+        return User.builder()
           .username(librarian.get().getUsername())
           .password(librarian.get().getPassword())
           .roles(getRoles(librarian.get()).toArray(new String[0]))
           .build();
+      }
+      throw new DisabledException("Account is not activated: " + librarian.get().getStatus());
     }
 
     Optional<Member> member = memberRepository.getMemberByUsername(username);
     if (member.isPresent()) {
-      return User.builder()
+      if (isAccountPermit(member.get().getStatus())) {
+
+        return User.builder()
           .username(member.get().getUsername())
           .password(member.get().getPassword())
           .roles(getRoles(member.get()).toArray(new String[0]))
           .build();
+      } else {
+        throw new DisabledException("Account is not activated: " + member.get().getStatus());
+      }
     }
 
     Optional<Admin> admin = adminRepository.getAdminByUsername(username);
     if (admin.isPresent()) {
-      return User.builder()
+      if (isAccountPermit(admin.get().getStatus())) {
+
+        return User.builder()
           .username(admin.get().getUsername())
           .password(admin.get().getPassword())
           .roles(getRoles(admin.get()).toArray(new String[0]))
           .build();
+      }
+      throw new DisabledException("Account is not activated: " + admin.get().getStatus());
     }
 
     throw new UsernameNotFoundException("Username are given but not found");
