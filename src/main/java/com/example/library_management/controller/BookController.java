@@ -210,7 +210,7 @@ public class BookController {
           List<Book> subjectRelatedBooks = bookService.getBookRelatedSubjects(subject);
           if (!subjectRelatedBooks.isEmpty()) {
             for (Book b : subjectRelatedBooks) {
-              if (b.equals(book.get())) {
+              if (b.equals(book.get()) || books.contains(b)) {
                 continue;
               }
               books.add(b);
@@ -218,9 +218,6 @@ public class BookController {
           }
         }
 
-        // for (Book b : books) {
-        //   System.out.println(b.getTitle());
-        // }
         model.addAttribute("books", books);
       }
       // getBookRelatedSubjects(book.get());
