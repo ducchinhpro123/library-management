@@ -6,6 +6,7 @@ import com.example.library_management.repository.AuthorRepository;
 import com.example.library_management.repository.BookAuthorRepository;
 import com.example.library_management.repository.BookRepository;
 import jakarta.transaction.Transactional;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -15,6 +16,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.LinkedList;
+import java.util.HashSet;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -96,6 +101,19 @@ public class BookService {
       return false;
     }
   }
+
+  public Set<Subject> subjects(Book book) {
+    Set<Subject> subjects = new HashSet<>();
+
+    return subjects;
+  }
+  
+  public List<Book> getBookRelatedSubjects(Subject subject) {
+    List<Book> books = bookRepository.findBooksBySubjectsContainingIgnoreCase(subject);
+
+    return books;
+  }
+
 
 //  Cannot invoke "String.isEmpty()" because the return value of "com.example.library_management.model.Book.getImageUrl()" is null
 //  java.nio.file.DirectoryNotEmptyException: /home/voducchinh/Github/library-management/src/main/resources/static/images
