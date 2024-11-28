@@ -39,8 +39,13 @@
             <div class="row">
 
                 <div class="col-sm-6 col-md-3 mb-4" th:each="book : ${books}">
-                    <a href="#">
+
+                    <!-- <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}"> -->
+                    <!--     <i class="fa fa-eye"></i> Detail -->
+                    <!-- </a> -->
+                    <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
                         <img class="img-fluid" th:src="@{'/images/' + ${book.imageUrl}}" alt="Alt Text" />
+                        <p th:text="${book.title}"></p>
                         <!-- <img class="img-fluid" src="http://placehold.it/500x300" /> -->
                     </a>
                 </div>
