@@ -1,58 +1,124 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{index}" lang="en">
+      layout:decorate="~{index}" lang="en">
 
-<head>
-    <title>Book Detail</title>
-</head>
+    <head>
+        <title th:text="${book.title}"></title>
+    </head>
 
-<body>
-    <div layout:fragment="content">
-        <div class="container">
-            <h1 class="my-4 fw-bold" th:text="${book.title}"><br /></h1>
-            <div class="row">
-                <div class="col-md-8">
-                    <img class="img-fluid" th:src="@{'/images/' + ${book.imageUrl}}" alt="Alt Text" />
+    <body>
+        <div layout:fragment="content">
+            <div class="container py-5">
+                <!-- Book Title Section -->
+                <div class="mb-5">
+                    <h1 class="display-4 fw-bold text-primary" th:text="${book.title}"></h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" th:text="${book.title}"></li>
+                        </ol>
+                    </nav>
                 </div>
 
-                <div class="col-md-4">
-                    <h3 class="my-3">Description</h3>
-                    <p th:text="${book.description}"></p>
-                    <h3 class="my-3">About author</h3>
-                    <div th:if="${author !=  null}">
-                        <ul class="list-unstyled">
-                            <li class="fw-bold" th:text="${author.name}"></li>
-                            <li th:text="${author.description}"></li>
-                        </ul>
+                <!-- Main Content -->
+                <div class="row g-4">
+                    <!-- Book Image Section -->
+                    <div class="col-md-5">
+                        <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                            <img class="img-thumbnail" th:src="@{'/images/' + ${book.imageUrl}}" 
+                                 th:alt="${book.title}" loading="lazy" />
+                        </div>
                     </div>
 
-                    <h3 class="my-3">Subject</h3>
-                    <ul class="list-unstyled" th:each="subject : ${book.subjects}">
-                        <li class="fw-bold" >
-                            <span th:text="${subject.name}" class="badge bg-primary">Primary</span>
-                        </li>
-                    </ul>
+                    <!-- Book Details Section -->
+                    <div class="col-md-4">
+                        <div class="sticky-top" style="top: 2rem;">
+                            <!-- Description Card -->
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 text-primary mb-3">
+                                        <i class="fas fa-book-open me-2"></i>Description
+                                    </h3>
+                                    <p class="card-text" th:text="${book.description}"></p>
+                                </div>
+                            </div>
+
+                            <!-- Author Card -->
+                            <div class="card shadow-sm mb-4" th:if="${author != null}">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 text-primary mb-3">
+                                        <i class="fas fa-user-edit me-2"></i>About Author
+                                    </h3>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="flex-grow-1">
+                                            <h4 class="h5 fw-bold mb-1" th:text="${author.name}"></h4>
+                                            <p class="text-muted mb-0" th:text="${author.description}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subjects Card -->
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 text-primary mb-3">
+                                        <i class="fas fa-tags me-2"></i>Subjects
+                                    </h3>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span th:each="subject : ${book.subjects}" 
+                                              class="badge bg-primary bg-gradient rounded-pill px-3 py-2"
+                                              th:text="${subject.name}">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary btn-lg">
+                                    <i class="fas fa-book-reader me-2"></i>Borrow Now
+                                </button>
+                                <button class="btn btn-outline-primary btn-lg">
+                                    <i class="fas fa-bookmark me-2"></i>Add to Wishlist
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <h3 class="my-4">Related Books<br /></h3>
-            
-            <div class="row">
 
-                <div class="col-sm-6 col-md-3 mb-4" th:each="book : ${books}">
+                <!-- Related Books Section -->
+                <div class="mt-5 pt-5 border-top">
+                    <h3 class="h2 text-primary mb-4">
+                        <i class="fas fa-books me-2"></i>Related Books
+                    </h3>
 
-                    <!-- <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}"> -->
-                    <!--     <i class="fa fa-eye"></i> Detail -->
-                    <!-- </a> -->
-                    <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
-                        <img class="img-fluid" th:src="@{'/images/' + ${book.imageUrl}}" alt="Alt Text" />
-                        <p th:text="${book.title}"></p>
-                        <!-- <img class="img-fluid" src="http://placehold.it/500x300" /> -->
-                    </a>
+                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
+                        <div class="col" th:each="book : ${books}">
+                            <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}" 
+                               class="card h-75 shadow-sm hover-elevate text-decoration-none">
+                                <img class="card-img-top" th:src="@{'/images/' + ${book.imageUrl}}" 
+                                     th:alt="${book.title}" loading="lazy" />
+                                <div class="card-body p-3">
+                                    <h5 class="card-title h6 text-dark mb-0 text-truncate" 
+                                        th:text="${book.title}">
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
-    </div>
-</body>
+
+        <style>
+.hover-elevate {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+        .hover-elevate:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+        </style>
+    </body>
 
 </html>
