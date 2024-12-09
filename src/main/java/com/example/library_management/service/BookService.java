@@ -47,6 +47,7 @@ public class BookService {
   public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
     try {
       List<Book> books = bookRepository.findBooksByISBNContainingAndTitleContainingAndPublisherContaining(isbn, title, publisher);
+
       return books;
     } catch (Exception e) {
       e.printStackTrace();
@@ -108,10 +109,9 @@ public class BookService {
     return subjects;
   }
   
-  public List<Book> getBookRelatedSubjects(Subject subject) {
-    List<Book> books = bookRepository.findBooksBySubjectsContainingIgnoreCase(subject);
-
-    return books;
+  public Set<Book> getBookRelatedSubjects(Set<Subject> subjects, String id) {
+      return bookRepository.findBooksBySubjectsInAndISBNNot(subjects, id);
+      // return bookRepository.findBooksBySubjectsContainingIgnoreCase(subject);
   }
 
 

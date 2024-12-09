@@ -1,6 +1,5 @@
 package com.example.library_management.controller;
 
-import com.example.library_management.annotation.CheckAdmin;
 import com.example.library_management.dto.BookDTO;
 import com.example.library_management.model.Author;
 import com.example.library_management.model.Book;
@@ -15,8 +14,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,9 +26,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
+// import java.util.LinkedHashSet;
+// import java.util.LinkedList;
 import java.util.Set;
 
 // @RestController("/api")
@@ -46,13 +49,10 @@ public class BookController {
     this.bookAuthorService = bookAuthorService;
     this.subjectRepository = subjectRepository;
     this.authorService = authorService;
-  }
+      }
 
   /**
    * NOTE: About the CheckAdmin annotation: it is denoted that only admin have
-   * this permission to perform this action.
-  */
-
    * this permission to perform this action
    * 'CheckLibrarian' annotation: Admin and Librarian will be able to access this page
    * In other word: CheckAdmin retricts everyone except admin
@@ -60,21 +60,21 @@ public class BookController {
    * otherwise, return to 404 page
    */
 
+  @GetMapping("/admin/table")
   public String tablePage(Model model) {
     List<Book> books = bookService.findAllBooks();
-
     model.addAttribute("books", books);
     return "table";
   }
 
-  @GetMapping("/new-book")
+  @GetMapping("/admin/new-book")
   public String newBookPage(Model model) {
     model.addAttribute("book", new BookDTO());
     model.addAttribute("subjects", subjectRepository.findAll());
     return "new_book";
   }
 
-  @PostMapping("/new-book")
+  @PostMapping("/admin/new-book")
   public String newBook(@ModelAttribute BookDTO bookDTO, Model model) {
     try {
       bookService.saveBookWithoutAuthor(bookDTO);
@@ -102,7 +102,7 @@ public class BookController {
     return dto;
   }
 
-  @PostMapping("/update-book")
+  @PostMapping("/admin/update-book")
   public String postUpdateBook(@ModelAttribute BookDTO dto, RedirectAttributes redirect) {
     try {
       bookService.update(dto);
@@ -115,7 +115,7 @@ public class BookController {
     }
   }
 
-  @GetMapping("/update-book/{isbn}")
+  @GetMapping("/admin/update-book/{isbn}")
   public String updateBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     boolean isAdmin = auth.getAuthorities().stream().anyMatch(granted -> granted.getAuthority().equals("ROLE_ADMIN"));
@@ -123,7 +123,6 @@ public class BookController {
       try {
         Optional<Book> book = bookService.getBook(isbn);
         if (book.isPresent()) {
-
           BookDTO dto = convertBookToDTO(book.get());
           String pat = System.getProperty("user.dir") + "/src/main/resources/static/images/";
           Path path = Paths.get(pat + book.get().getImageUrl());
@@ -142,11 +141,11 @@ public class BookController {
         return "redirect:/";
       }
     } else {
-        return "redirect:/403";
+      return "redirect:/403";
     }
   }
 
-  @GetMapping("/delete-book/{isbn}")
+  @GetMapping("/admin/delete-book/{isbn}")
   public String deleteBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect) {
     try {
       bookService.removeBookByIsbn(isbn);
@@ -158,13 +157,6 @@ public class BookController {
       return "redirect:/404";
     }
   }
-
-  
-  // private List<Book> getBookRelatedSubjects(Book book) {
-  //   List<Book> books = new LinkedList<>();
-
-  //   return books;
-  // }
 
   @GetMapping("/book/{isbn}") //
   public String viewDetailBook(@PathVariable("isbn") String isbn, Model model, RedirectAttributes redirect) {
@@ -178,23 +170,9 @@ public class BookController {
         model.addAttribute("author", null);
       }
       model.addAttribute("book", book.get());
-      if (book.get().getSubjects().size() > 1 || !book.get().getSubjects().isEmpty()) {
+      if (book.get().getSubjects().size() > 0 || !book.get().getSubjects().isEmpty()) {
         Set<Subject> subjects = book.get().getSubjects();
-
-        Set<Book> books = new HashSet<>();
-
-        for (Subject subject : subjects) {
-          List<Book> subjectRelatedBooks = bookService.getBookRelatedSubjects(subject);
-          if (!subjectRelatedBooks.isEmpty()) {
-            for (Book b : subjectRelatedBooks) {
-              if (b.equals(book.get()) || books.contains(b)) {
-                continue;
-              }
-              books.add(b);
-            }
-          }
-        }
-
+        Set<Book> books = bookService.getBookRelatedSubjects(subjects, book.get().getISBN());
         model.addAttribute("books", books);
       }
       // getBookRelatedSubjects(book.get());

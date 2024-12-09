@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface BookRepository extends JpaRepository<Book, String> {
 
@@ -25,5 +26,6 @@ public interface BookRepository extends JpaRepository<Book, String> {
 
 //    List<Book> findBooksRelatedToSubjects(@Param("subject") Subject subject);
     List<Book> findBooksBySubjectsContainingIgnoreCase(Subject subject);
+    Set<Book> findBooksBySubjectsInAndISBNNot(Set<Subject> subjects, String isbn);
     // Given the subject name, find all the books that related to the given book and has the same subject
 }
