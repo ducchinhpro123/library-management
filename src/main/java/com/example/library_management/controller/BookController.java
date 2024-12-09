@@ -159,29 +159,6 @@ public class BookController {
     }
   }
 
-  @GetMapping("/api/book/filter/")
-  public String filter(
-      @RequestParam("title") String title, 
-      @RequestParam("publisher") String publisher, 
-      @RequestParam("isbn") String isbn, 
-      Model model) {
-
-    // public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
-    List<Book> books = bookService.filterIsbnTitlePublisher(isbn, title, publisher);
-
-    if (books.size() == 0 || books.isEmpty()) {
-      model.addAttribute("message", "Book not found");
-    }
-
-    model.addAttribute("books", books);
-
-    return "index";
-  }
-
-
-  // <a th:href="@{/book/{isbn}(isbn=${book.ISBN})}">
-  //     <i class="fa fa-eye"></i> Detail
-  // </a>
   
   // private List<Book> getBookRelatedSubjects(Book book) {
   //   List<Book> books = new LinkedList<>();
@@ -230,47 +207,4 @@ public class BookController {
     return "book_detail";
   }
 
-  /* ------------------------------------ REST_API ------------------------------------*/
-  // @PostMapping("/create-book")
-  // public ResponseEntity<String> createBook(
-  //    @RequestBody Book newBook, @RequestParam String authorName) {
-  //  try {
-  //    bookService.createBook(newBook, authorName);
-  //    return new ResponseEntity<>("Book created successfully.", HttpStatus.CREATED);
-  //  } catch (Exception e) {
-  //    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-  //  }
-  // }
-  //
-  // @DeleteMapping("/delete-book")
-  // public ResponseEntity<String> deleteBook(@RequestParam(name = "isbn") String isbn) {
-  //  try {
-  //    bookService.deleteBook(isbn);
-  //    return new ResponseEntity<>("Book deleted successfully.", HttpStatus.OK);
-  //  } catch (Exception e) {
-  //    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-  //  }
-  // }
-  //
-  // @PutMapping("/edit-book")
-  // public ResponseEntity<String> updateBook(@RequestBody Book book) {
-  //  try {
-  //    String isbn = book.getISBN();
-  //    bookService.updateBook(isbn, book);
-  //    return new ResponseEntity<>("Book updated successfully.", HttpStatus.OK);
-  //  } catch (Exception e) {
-  //    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-  //  }
-  // }
-  //
-  // @GetMapping("/get-book")
-  // public ResponseEntity<?> getBook(@RequestParam(name = "isbn") String isbn) {
-  //  Optional<Book> book = bookService.getBook(isbn);
-  //  if (book.isPresent()) return new ResponseEntity<>(book.get(), HttpStatus.OK);
-  //  else {
-  //    Map<String, String> message = new HashMap<>();
-  //    message.put("message", "Can not found the book with the isbn: " + isbn);
-  //    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-  //  }
-  // }
 }
