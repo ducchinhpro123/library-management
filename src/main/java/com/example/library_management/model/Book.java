@@ -25,7 +25,7 @@ public class Book {
       name = "book_subjects",
       joinColumns = @JoinColumn(name = "book_isbn"),
       inverseJoinColumns = @JoinColumn(name = "subject_id"))
-  private Set<Subject> subjects = new LinkedHashSet<>();
+  private Set<Subject> subjects = new LinkedHashSet<>(); // Remember to init this
 
   public void saveSubject(Subject subject) {
     this.subjects.add(subject);
@@ -39,6 +39,7 @@ public class Book {
       subject.getBooks().remove(this);
     }
   }
+
 
   public String getDescription() {
     return description;

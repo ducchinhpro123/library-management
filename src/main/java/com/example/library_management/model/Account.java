@@ -1,10 +1,12 @@
 package com.example.library_management.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToMany;
 
 @MappedSuperclass
 public class Account {
@@ -13,6 +15,10 @@ public class Account {
   private String firstName;
   private String lastName;
   private String image;
+
+
+  @OneToMany
+  private List<BookLending> bookLendings;
 
   @Override
   public String toString() {
@@ -90,4 +96,12 @@ public class Account {
   public String getRolesString() {
     return roles.stream().map(AccountRole::name).collect(Collectors.joining(","));
   }
+
+    public List<BookLending> getBookLendings() {
+        return bookLendings;
+    }
+
+    public void setBookLendings(List<BookLending> bookLendings) {
+        this.bookLendings = bookLendings;
+    }
 }
