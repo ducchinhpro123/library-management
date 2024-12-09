@@ -53,8 +53,6 @@ public class BookController {
    * this permission to perform this action.
   */
 
-  @CheckAdmin
-  @GetMapping("/table")
    * this permission to perform this action
    * 'CheckLibrarian' annotation: Admin and Librarian will be able to access this page
    * In other word: CheckAdmin retricts everyone except admin
@@ -69,7 +67,6 @@ public class BookController {
     return "table";
   }
 
-  @CheckAdmin
   @GetMapping("/new-book")
   public String newBookPage(Model model) {
     model.addAttribute("book", new BookDTO());
@@ -77,7 +74,6 @@ public class BookController {
     return "new_book";
   }
 
-  @CheckAdmin
   @PostMapping("/new-book")
   public String newBook(@ModelAttribute BookDTO bookDTO, Model model) {
     try {
@@ -106,7 +102,6 @@ public class BookController {
     return dto;
   }
 
-  @CheckAdmin
   @PostMapping("/update-book")
   public String postUpdateBook(@ModelAttribute BookDTO dto, RedirectAttributes redirect) {
     try {
@@ -120,7 +115,6 @@ public class BookController {
     }
   }
 
-  @CheckAdmin
   @GetMapping("/update-book/{isbn}")
   public String updateBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -152,7 +146,6 @@ public class BookController {
     }
   }
 
-  @CheckAdmin
   @GetMapping("/delete-book/{isbn}")
   public String deleteBook(@PathVariable("isbn") String isbn, RedirectAttributes redirect) {
     try {
