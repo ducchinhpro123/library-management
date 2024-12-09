@@ -23,16 +23,16 @@ public class SecurityConfig {
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(
+      // ROLE_MEMBER,    |
+      // ROLE_LIBRARIAN, | Three fundamental roles define in AccountRole
+      // ROLE_ADMIN,     | 
+      .authorizeHttpRequests(
             (requests) ->
                 requests
+                    .requestMatchers("/admin/**", "/blank").hasRole("ADMIN")
+                    // .requestMatchers("/profile").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER", "ROLE_LIBRARIAN")
                     .requestMatchers("/", "/registration", "/assets/**", "/images/**", "/login", "/book/**", "api/book/filter/*")
                     .permitAll()
-  // ROLE_MEMBER,    |
-  // ROLE_LIBRARIAN, | Three fundamental roles define in AccountRole
-  // ROLE_ADMIN,     | 
-                    .requestMatchers("/table", "/blank").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
-                    .requestMatchers("/profile").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER", "ROLE_LIBRARIAN")
                     .anyRequest()
                     .authenticated()).exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
         .formLogin((form) -> form.loginPage("/login").defaultSuccessUrl("/").permitAll())
@@ -51,11 +51,13 @@ public class SecurityConfig {
   }
 
   @Bean
-  AuthenticationProvider provider() {
+  DaoAuthenticationProvider provider() {
     DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
     daoAuthenticationProvider.setUserDetailsService(customUserDetails);
     daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
     return daoAuthenticationProvider;
   }
+  // AuthenticationProvider provider() {
+  // }
 }
