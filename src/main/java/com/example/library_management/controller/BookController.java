@@ -55,6 +55,13 @@ public class BookController {
 
   @CheckAdmin
   @GetMapping("/table")
+   * this permission to perform this action
+   * 'CheckLibrarian' annotation: Admin and Librarian will be able to access this page
+   * In other word: CheckAdmin retricts everyone except admin
+   *                CheckLibrarian retricts everyone except librarian and admin
+   * otherwise, return to 404 page
+   */
+
   public String tablePage(Model model) {
     List<Book> books = bookService.findAllBooks();
 
