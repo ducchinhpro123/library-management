@@ -79,7 +79,7 @@ public class BookController {
     try {
       bookService.saveBookWithoutAuthor(bookDTO);
       model.addAttribute("message", "Book created successfully.");
-      return "redirect:/table";
+      return "redirect:/admin/table";
     } catch (IllegalArgumentException e) {
       model.addAttribute("message", "Invalid input: " + e.getMessage());
       return "redirect:/new-book";
@@ -107,11 +107,11 @@ public class BookController {
     try {
       bookService.update(dto);
       redirect.addFlashAttribute("message", "Updated successful");
-      return "redirect:/table";
+      return "redirect:/admin/table";
     } catch (Exception e) {
       // WARNING: Don't do this in production
       redirect.addFlashAttribute("message", e.getMessage());
-      return "redirect:/table";
+      return "redirect:/admin/table";
     }
   }
 
@@ -151,7 +151,7 @@ public class BookController {
       bookService.removeBookByIsbn(isbn);
       redirect.addFlashAttribute(
           "message", "Book with ISBN " + isbn + " was successfully deleted.");
-      return "redirect:/table";
+      return "redirect:/admin/table";
     } catch (Exception e) {
       redirect.addFlashAttribute("message", "Can not delete the book with isbn." + e.getMessage());
       return "redirect:/404";
