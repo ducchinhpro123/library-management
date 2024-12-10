@@ -44,11 +44,9 @@ public class BookService {
     return bookRepository.findAll();
   }
 
-  public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
+  public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher, String language) {
     try {
-      List<Book> books = bookRepository.findBooksByISBNContainingAndTitleContainingAndPublisherContaining(isbn, title, publisher);
-
-      return books;
+        return bookRepository.findBooksByLanguageContainingAndPublisherContainingIgnoreCaseAndISBNContainingIgnoreCaseAndTitleContainingIgnoreCase(language, publisher, isbn, title );
     } catch (Exception e) {
       e.printStackTrace();
       return null;

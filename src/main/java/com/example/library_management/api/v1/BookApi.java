@@ -1,9 +1,6 @@
 package com.example.library_management.api.v1;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,13 +42,14 @@ public class BookApi {
   public String filter(
       @RequestParam("title") String title, 
       @RequestParam("publisher") String publisher, 
-      @RequestParam("isbn") String isbn, 
+      @RequestParam("isbn") String isbn,
+      @RequestParam("language") String language,
       Model model) {
-
     // public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
-    List<Book> books = bookService.filterIsbnTitlePublisher(isbn, title, publisher);
+    List<Book> books = bookService.filterIsbnTitlePublisher(
+            isbn.trim(), title.trim(), publisher.trim(), language.trim());
 
-    if (books.size() == 0 || books.isEmpty()) {
+    if (books.isEmpty()) {
       model.addAttribute("message", "Book not found");
     }
 

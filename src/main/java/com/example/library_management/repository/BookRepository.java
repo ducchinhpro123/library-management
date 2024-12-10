@@ -12,9 +12,21 @@ import java.util.Set;
 
 public interface BookRepository extends JpaRepository<Book, String> {
 
+    @Query("SELECT b FROM Book b WHERE " +
+            "(:language IS NULL OR LOWER(b.language) = LOWER(:language)) AND " +
+            "(:publisher IS NULL OR LOWER(b.publisher) LIKE LOWER(CONCAT('%', :publisher, '%'))) AND " +
+            "(:isbn IS NULL OR LOWER(b.isbn) LIKE LOWER(CONCAT('%', :isbn, '%'))) AND " +
+            "(:title IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')))")
+    List<Book> findBooksByLanguageContainingAndPublisherContainingIgnoreCaseAndISBNContainingIgnoreCaseAndTitleContainingIgnoreCase(
+            @Param("language") String language,
+            @Param("publisher") String publisher,
+            @Param("isbn") String isbn,
+            @Param("title") String title
+    );
+
     @Query("SELECT b from Book b WHERE (:isbn IS NULL OR b.isbn LIKE %:isbn%) AND (:title IS NULL OR b.title LIKE %:title%) AND (:publisher IS NULL OR b.publisher LIKE %:publisher%)")
     List<Book> findBooksByISBNContainingAndTitleContainingAndPublisherContaining(@Param("isbn") String isbn,
-            @Param("title") String title, 
+            @Param("title") String title,
             @Param("publisher") String publisher);
 
     List<Book> findByAuthorsName(@Param("authorName") String authorName);
