@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,11 +48,15 @@ public class CustomUserDetails implements UserDetailsService {
     Optional<Librarian> librarian = librarianRepository.getLibrarianByUsername(username);
     if (librarian.isPresent()) {
       if (isAccountPermit(librarian.get().getStatus())) {
-        return User.builder()
-          .username(librarian.get().getUsername())
-          .password(librarian.get().getPassword())
-          .roles(getRoles(librarian.get()).toArray(new String[0]))
-          .build();
+        return new CustomUserPrincipal(
+            librarian.get().getUsername(), 
+            librarian.get().getPassword(), 
+            librarian.get().getImage(), 
+            getRoles(librarian.get())
+              .stream()
+              .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+              .collect(Collectors.toList())
+         );
       }
       throw new DisabledException("Account is not activated: " + librarian.get().getStatus());
     }
@@ -59,12 +64,15 @@ public class CustomUserDetails implements UserDetailsService {
     Optional<Member> member = memberRepository.getMemberByUsername(username);
     if (member.isPresent()) {
       if (isAccountPermit(member.get().getStatus())) {
-
-        return User.builder()
-          .username(member.get().getUsername())
-          .password(member.get().getPassword())
-          .roles(getRoles(member.get()).toArray(new String[0]))
-          .build();
+        return new CustomUserPrincipal(
+            member.get().getUsername(), 
+            member.get().getPassword(), 
+            member.get().getImage(), 
+            getRoles(member.get())
+              .stream()
+              .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+              .collect(Collectors.toList())
+         );
       } else {
         throw new DisabledException("Account is not activated: " + member.get().getStatus());
       }
@@ -73,12 +81,16 @@ public class CustomUserDetails implements UserDetailsService {
     Optional<Admin> admin = adminRepository.getAdminByUsername(username);
     if (admin.isPresent()) {
       if (isAccountPermit(admin.get().getStatus())) {
+        return new CustomUserPrincipal(
+            admin.get().getUsername(), 
+            admin.get().getPassword(), 
+            admin.get().getImage(), 
+            getRoles(admin.get())
+              .stream()
+              .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+              .collect(Collectors.toList())
+         );
 
-        return User.builder()
-          .username(admin.get().getUsername())
-          .password(admin.get().getPassword())
-          .roles(getRoles(admin.get()).toArray(new String[0]))
-          .build();
       }
       throw new DisabledException("Account is not activated: " + admin.get().getStatus());
     }
