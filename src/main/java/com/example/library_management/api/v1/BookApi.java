@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_management.model.Book;
 import com.example.library_management.repository.SubjectRepository;
@@ -19,7 +20,7 @@ import com.example.library_management.service.AuthorService;
 import com.example.library_management.service.BookAuthorService;
 import com.example.library_management.service.BookService;
 
-@Controller
+@RestController
 public class BookApi {
   private final BookService bookService;
   private final BookAuthorService bookAuthorService;
@@ -79,4 +80,11 @@ public class BookApi {
       return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @GetMapping("/get-all-books")
+  public ResponseEntity<List<Book>> getAllBooks() {
+    List<Book> books = bookService.findAllBooks();
+    return new ResponseEntity<>(books, HttpStatus.OK);
+  }
+
 }
