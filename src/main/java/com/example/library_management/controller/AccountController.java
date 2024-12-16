@@ -7,6 +7,9 @@ import com.example.library_management.model.Admin;
 import com.example.library_management.model.Librarian;
 import com.example.library_management.model.Member;
 import com.example.library_management.service.AccountService;
+import com.example.library_management.validator.AccountValidator;
+
+import jakarta.validation.Valid;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,13 +19,17 @@ import java.util.stream.Collectors;
 
 import javax.security.auth.login.AccountNotFoundException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +40,14 @@ public class AccountController {
     /*Any flag that starts with admin means only for admin */
 
   private final AccountService accountService;
+
+  @Autowired
+  private AccountValidator accountValidator;
+
+  @InitBinder
+  protected void InitBinder(WebDataBinder binder) {
+    binder.addValidators(accountValidator);
+  }
 
   public AccountController(AccountService accountService) {
     this.accountService = accountService;
@@ -198,26 +213,48 @@ public class AccountController {
   }
 
   @GetMapping("/registration")
-  public String registerAccount() {
+  public String registerAccount(Model model) {
+    model.addAttribute("account", new Account());
     return "register";
   }
 
   // For normal user
   @PostMapping("/registration")
-  public String registerAccountHandle(Model model, Account account) {
+  public String registerAccountHandle(@Valid @ModelAttribute("account") Account account,
+      BindingResult bidingResult,
+      Model model, 
+      RedirectAttributes redirectAddAttributes) 
+  {
     try {
+      if (bidingResult.hasErrors()) 
+        return "register";
+
+      // if (account.getPassword() !=) {
+
+      // }
+
+      account.setPasswordConfirm(null);
       accountService.saveAccount(account);
+      // Send message to login page
+      redirectAddAttributes.addFlashAttribute("successMessage", "Registration successful!");
       return "redirect:/login";
     } catch (Exception e) {
-      model.addAttribute("message", e.getMessage());
+      model.addAttribute("errorMessage", e.getMessage());
       return "register";
     }
   }
 
   @GetMapping("/login")
-  public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+  public String login(@RequestParam(value = "error", required = false) String error, 
+      @RequestParam(value = "logout", required = false) String logout,
+      @RequestParam(value = "message", required = false) String message,
+      Model model) {
     if (error != null) {
-      model.addAttribute("errorMessage", "Invalid username or password.");
+      model.addAttribute("error", true);
+      model.addAttribute("errorMessage", message != null ? message : "Invalid username or password.");
+    }
+    if (logout != null) {
+      model.addAttribute("message", "You have been successfully logged out");
     }
 
     return "login";
