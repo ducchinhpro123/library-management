@@ -7,15 +7,36 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @MappedSuperclass
 public class Account {
+  @NotBlank(message = "Username is required")
+  @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
+  @Pattern(regexp = "^[a-zA-Z0-9._-]{3,}$", message = "Username can only contains letters, numbers, dots, underscores and hyphens")
   private String username;
-  private String password;
-  private String firstName;
-  private String lastName;
-  private String image;
 
+  @NotBlank(message = "Password is required")
+  @Size(min = 5, max = 100, message = "Password must be between 5 and 100 characters")
+  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", 
+    message = "Password must contain at least one digit, one lowercase, one uppercase, and one special character")
+  private String password;
+
+  @Transient // Indicate that this field does not persistent in the database
+  private String passwordConfirm;
+
+  @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+  @Pattern(regexp = "^[a-zA-Z\\s-']+$", message = "First name can only contain letters, spaces, hyphens and apostrophes")
+  private String firstName;
+
+  @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
+  @Pattern(regexp = "^[a-zA-Z\\s-']+$", message = "Last name can only contain letters, spaces, hyphens and apostrophes")
+  private String lastName;
+
+  private String image;
 
   @OneToMany
   private List<BookLending> bookLendings;
@@ -32,6 +53,15 @@ public class Account {
   }
 
   private AccountStatus status;
+
+  public String getPasswordConfirm() {
+    return passwordConfirm;
+  }
+
+  public void setPasswordConfirm(String passwordConfirm) {
+    this.passwordConfirm = passwordConfirm;
+  }
+
 
   public String getUsername() {
     return username;
