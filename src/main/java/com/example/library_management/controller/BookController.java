@@ -90,6 +90,25 @@ public class BookController {
     }
   }
 
+  @GetMapping("/api/v1/book/filter/")
+  public String filter(
+      @RequestParam("title") String title, 
+      @RequestParam("publisher") String publisher, 
+      @RequestParam("isbn") String isbn,
+      @RequestParam("language") String language,
+      Model model) {
+    // public List<Book> filterIsbnTitlePublisher(String isbn, String title, String publisher) {
+    List<Book> books = bookService.filterIsbnTitlePublisher(
+            isbn.trim(), title.trim(), publisher.trim(), language.trim());
+
+    if (books.isEmpty()) {
+      model.addAttribute("message", "Book not found");
+    }
+
+    model.addAttribute("books", books);
+    return "index";
+  }
+
   private BookDTO convertBookToDTO(Book book) {
     BookDTO dto = new BookDTO();
     dto.setISBN(book.getISBN());
