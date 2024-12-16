@@ -25,20 +25,32 @@
                             <div class="text-center">
                                 <h4 class="text-dark mb-4">Create an Account!</h4>
                             </div>
-                            <form method="POST" action="/registration" class="user">
+                            <form method="POST" th:action="@{/registration}" class="user" th:object="${account}">
                                 <div class="row mb-3">
-                                    <!--<div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="First Name" name="first_name"></div>-->
-                                    <div class="col-sm-6"><input class="form-control form-control-user" type="text"
-                                            id="username" placeholder="Username" name="username"></div>
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-user" 
+                                               type="text"
+                                               id="username" 
+                                               th:field="*{username}"
+                                               placeholder="Username">
+                                    </div>
                                 </div>
                                 <!--<div class="mb-3"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address" name="email"></div>-->
                                 <div class="row mb-3">
-                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input class="form-control form-control-user"
                                             type="password" id="examplePasswordInput" placeholder="Password"
-                                            name="password"></div>
-                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password"
-                                            id="exampleRepeatPasswordInput" placeholder="Repeat Password"
-                                            name="password_repeat"></div>
+                                                                                      th:field="*{password}"
+                                            >
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-user" 
+                                                                 type="password" 
+                                                                 th:field="*{passwordConfirm}"
+                                            id="exampleRepeatPasswordInput" placeholder="Repeat Password" >
+
+                                    </div>
                                 </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Register
                                     Account</button>
                                 <hr><a class="btn btn-primary d-block btn-google btn-user w-100 mb-2" role="button"><i
@@ -47,6 +59,17 @@
                                         class="fab fa-facebook-f"></i>&nbsp; Register with Facebook</a>
                                 <hr>
                             </form>
+
+                            <div th:if="${#fields.hasErrors('account.*')}" class="alert alert-danger">   
+                                <ul>
+                                    <li th:each="err : ${#fields.errors('account.*')}" th:text="${err}"></li>
+                                </ul>
+                            </div>
+
+                            <div th:if="${errorMessage}" class="alert alert-danger">
+                                <span th:text="${errorMessage}"></span>
+                            </div>
+
                             <div class="text-center"><a class="small" href="forgot-password.html">Forgot Password?</a>
                             </div>
                             <div class="text-center"><a class="small" href="login.html">Already have an account?

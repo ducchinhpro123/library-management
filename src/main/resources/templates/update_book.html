@@ -10,7 +10,7 @@
     <div layout:fragment="content" class="container mt-5 col-8">
         <h2 class="mb-4l">Update Book</h2>
 
-        <form th:object="${book}" th:action="@{/update-book}" method="post" enctype="multipart/form-data">
+        <form th:object="${book}" th:action="@{/admin/update-book}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="isbn" class="form-label">ISBN:</label>
                 <input type="text" id="isbn" th:field="*{ISBN}" class="form-control" required>

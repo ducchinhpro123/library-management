@@ -7,53 +7,111 @@
 </head>
 
 <body>
-    <div layout:fragment="content" class="container mt-5 col-8">
-        <h2 class="mb-4">Add New Book</h2>
-        <form th:object="${book}" th:action="@{/new-book}" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="isbn" class="form-label">ISBN:</label>
-                <input type="text" id="isbn" th:field="*{ISBN}" class="form-control" required>
-            </div>
+    <div layout:fragment="content" class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h4 class="mb-0">
+                            <i class="bi bi-book-fill me-2"></i>Add New Book
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:object="${book}" th:action="@{/admin/new-book}" method="post" enctype="multipart/form-data">
+                            <div class="row g-3">
+                                <!-- ISBN and Title in one row -->
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="isbn" th:field="*{ISBN}" class="form-control" placeholder="ISBN" required>
+                                        <label for="isbn">
+                                            <i class="bi bi-upc-scan me-1"></i>ISBN
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Title" required>
+                                        <label for="title">
+                                            <i class="bi bi-type me-1"></i>Title
+                                        </label>
+                                    </div>
+                                </div>
 
-            <div class="mb-3">
-                <label for="title" class="form-label">Title:</label>
-                <input type="text" id="title" th:field="*{title}" class="form-control" required>
-            </div>
+                                <!-- Language and Publisher in one row -->
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="language" th:field="*{language}" class="form-control" placeholder="Language" required>
+                                        <label for="language">
+                                            <i class="bi bi-translate me-1"></i>Language
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="publisher" th:field="*{publisher}" class="form-control" placeholder="Publisher" required>
+                                        <label for="publisher">
+                                            <i class="bi bi-building me-1"></i>Publisher
+                                        </label>
+                                    </div>
+                                </div>
 
-            <div class="mb-3">
-                <label for="language" class="form-label">Language:</label>
-                <input type="text" id="language" th:field="*{language}" class="form-control" required>
-            </div>
+                                <!-- Number of Pages -->
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" id="numberOfPage" th:field="*{numberOfPage}" class="form-control" placeholder="Number of Pages" required>
+                                        <label for="numberOfPage">
+                                            <i class="bi bi-file-text me-1"></i>Number of Pages
+                                        </label>
+                                    </div>
+                                </div>
 
-            <div class="mb-3">
-                <label for="publisher" class="form-label">Publisher:</label>
-                <input type="text" id="publisher" th:field="*{publisher}" class="form-control" required>
-            </div>
+                                <!-- Image Upload -->
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-image"></i>
+                                        </span>
+                                        <input type="file" id="image" th:field="*{image}" class="form-control" accept="image/*">
+                                    </div>
+                                </div>
 
-            <div class="mb-3">
-                <label for="numberOfPage" class="form-label">Number of Pages:</label>
-                <input type="number" id="numberOfPage" th:field="*{numberOfPage}" class="form-control" required>
-            </div>
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea id="description" th:field="*{description}" class="form-control" style="height: 100px" placeholder="Description"></textarea>
+                                        <label for="description">
+                                            <i class="bi bi-card-text me-1"></i>Description
+                                        </label>
+                                    </div>
+                                </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label">Image:</label>
-                <input type="file" id="image" th:field="*{image}" class="form-control">
-            </div>
+                                <!-- Subjects -->
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="category" th:field="*{subjects}" multiple style="height: 100px">
+                                            <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
+                                        </select>
+                                        <label for="category">
+                                            <i class="bi bi-tags me-1"></i>Subjects
+                                        </label>
+                                    </div>
+                                </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description:</label>
-                <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+                                <!-- Submit Button -->
+                                <div class="col-12 text-end mt-4">
+                                    <button type="button" class="btn btn-secondary me-2">
+                                        <i class="bi bi-x-circle me-1"></i>Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle me-1"></i>Create Book
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <div class="mb-3">
-                <label for="category" class="form-label">Subjects:</label>
-                <select class="form-select" id="category" th:field="*{subjects}" multiple>
-                    <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Create Book</button>
-        </form>
+        </div>
     </div>
 </body>
 
