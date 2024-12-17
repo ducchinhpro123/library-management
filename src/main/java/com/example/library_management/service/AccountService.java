@@ -6,6 +6,8 @@ import com.example.library_management.repository.AdminRepository;
 import com.example.library_management.repository.LibrarianRepository;
 import com.example.library_management.repository.MemberRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -42,6 +44,44 @@ public class AccountService {
     this.passwordEncoder = passwordEncoder;
     this.adminRepository = adminRepository;
     this.librarianRepository = librarianRepository;
+  }
+
+  public AccountWithDTO getAccountByUsernameAndRole(String username, String primaryRole) {
+    return switch (primaryRole) {
+      case "ROLE_ADMIN" -> getAdminAccount(username);
+      case "ROLE_LIBRARIAN" -> getLibrarianAccount(username);
+      case "ROLE_MEMBER" -> getMemberAccount(username);
+      default -> throw new IllegalStateException("Invalid role: " + primaryRole);
+    };
+  }
+
+  private AccountWithDTO getLibrarianAccount(String username) {
+    Librarian librarian = librarianRepository.getLibrarianByUsername(username)
+      .orElseThrow(() -> new EntityNotFoundException("Librarian not found"));
+
+    AccountDTO dto = new AccountDTO(librarian);
+    dto.setRoles(librarian.getRoles());
+
+    return new AccountWithDTO(librarian, dto);
+  }
+
+  private AccountWithDTO getMemberAccount(String username) {
+    Member member = memberRepository.getMemberByUsername(username)
+      .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+
+    AccountDTO dto = new AccountDTO(member);
+    dto.setRoles(member.getRoles());
+
+    return new AccountWithDTO(member, dto);
+  }
+
+  private AccountWithDTO getAdminAccount(String username) {
+    Admin admin = adminRepository.getAdminByUsername(username)
+      .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+
+    AccountDTO accountDTO = new AccountDTO(admin);
+    AccountWithDTO accountWithDTO = new AccountWithDTO(admin, accountDTO);
+    return accountWithDTO;
   }
 
   public void saveLibrarian(Account account) throws Exception {
